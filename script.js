@@ -26,17 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const burger = document.getElementById('burger');
   const mobileNav = document.getElementById('mobileNav');
 
-  burger.addEventListener('click', () => {
-    const isOpen = mobileNav.classList.toggle('open');
-    burger.setAttribute('aria-expanded', isOpen);
-  });
-
-  // Close mobile nav when a link is clicked
-  mobileNav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileNav.classList.remove('open');
+  if (burger && mobileNav) {
+    burger.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', isOpen);
     });
-  });
+
+    // Close mobile nav when a link is clicked
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+      });
+    });
+  }
 
   /* ---- Scroll Reveal ---- */
   const reveals = document.querySelectorAll('.reveal');
@@ -147,5 +149,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const style = document.createElement('style');
   style.textContent = `.nav-links a.active { color: var(--purple); } .nav-links a.active::after { width: 100%; }`;
   document.head.appendChild(style);
+
+  /* ---- Pricing Tab Switcher ---- */
+  const pricingTabs = document.querySelectorAll('.pricing-tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  pricingTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active from all tabs
+      pricingTabs.forEach(t => t.classList.remove('active'));
+      // Add active to current tab
+      tab.classList.add('active');
+
+      // Hide all contents
+      tabContents.forEach(content => content.classList.remove('active'));
+      // Show Target content
+      const targetId = tab.getAttribute('data-tab');
+      const targetContent = document.getElementById(targetId);
+      if (targetContent) {
+        targetContent.classList.add('active');
+      }
+    });
+  });
 
 });

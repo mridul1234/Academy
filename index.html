@@ -25,30 +25,7 @@
         <div class="logo-text">[Academy<span>Name</span>]</div>
       </a>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#about">About</a></li>
-        <li><a href="#courses">Courses</a></li>
-        <li><a href="#why">Why Us</a></li>
-        <li><a href="#testimonials">Reviews</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#enroll">Contact</a></li>
-      </ul>
-
-      <a href="#enroll" class="btn btn-primary nav-cta" id="navEnrollBtn">🎓 Enroll Now</a>
-
-      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav" id="mobileNav">
-      <a href="#about">About</a>
-      <a href="#courses">Courses</a>
-      <a href="#why">Why Us</a>
-      <a href="#testimonials">Reviews</a>
-      <a href="#faq">FAQ</a>
-      <a href="#enroll">🎓 Enroll Now</a>
+      <a href="#enroll" class="btn btn-primary nav-cta" id="navEnrollBtn" style="display: inline-flex !important;">🎓 Book a Free Demo</a>
     </div>
   </div>
 </nav>
@@ -68,7 +45,7 @@
       <!-- Left: Text -->
       <div class="hero-left">
         <div class="hero-badge">
-          <span>🏆</span> Trusted by 1000+ happy families
+          <span>🏆</span> Trusted by 1000+ happy parents
         </div>
 
         <h1 class="hero-title" id="heroTitle">
@@ -85,8 +62,13 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#enroll" class="btn btn-primary" id="heroEnrollBtn">🎓 Start My Journey</a>
-          <a href="#courses" class="btn btn-secondary" id="heroCoursesBtn">📚 See Courses</a>
+          <a href="#enroll" class="btn btn-primary" id="heroEnrollBtn">🎓 Book a Free Demo</a>
+          <a href="#pricing" class="btn btn-secondary" id="heroCoursesBtn">💎 View Plans</a>
+        </div>
+
+        <div style="margin-top: 12px; font-weight: 800; display: flex; align-items: center; gap: 10px; font-size: 0.95rem;">
+          <span style="color: var(--text-light); text-decoration: line-through;">₹500</span>
+          <span style="color: var(--green); background: #DCFCE7; padding: 2px 10px; border-radius: 6px;">₹0 for the first class (100% FREE)</span>
         </div>
 
         <div class="hero-stats">
@@ -195,119 +177,225 @@
   </div>
 </section>
 
+
 <!-- ================================================
-     COURSES
+     PRICING
      ================================================ -->
-<section id="courses">
+<section id="pricing" style="padding: 60px 0; background: #fff;">
   <div class="container">
-    <div class="courses-header reveal">
-      <span class="section-tag">Our Programs</span>
-      <h2 class="section-title">Find the Perfect Course <br/>for Your Child 🎯</h2>
-      <p class="section-sub" style="text-align:center;">
-        Every course is crafted by expert chess coaches specifically for each age group 
-        — fun, structured, and results-driven!
-      </p>
+    <div class="pricing-header reveal" style="text-align: center;">
+      <span class="section-tag">Flexible Plans</span>
+      <h2 class="section-title">Invest in Your <br/>Child's Genius 💎</h2>
     </div>
 
-    <div class="courses-grid">
+    <!-- Pricing Tabs -->
+    <div class="pricing-tabs reveal">
+      <div class="pricing-tab active" data-tab="beginner">Beginner</div>
+      <div class="pricing-tab" data-tab="intermediate">Intermediate</div>
+      <div class="pricing-tab" data-tab="advanced">Advanced</div>
+    </div>
 
-      <!-- Course 1: Little Knights (4-6) -->
-      <div class="course-card reveal" id="course1">
-        <span class="course-emoji">🐣</span>
-        <div class="course-level">Level 1</div>
-        <div class="course-title">Little Knights</div>
-        <div class="course-age">👶 Ages 4 – 6</div>
-        <p class="course-desc">
-          A magical introduction to chess! Kids learn piece names, movements, and simple strategies 
-          through colorful stories and fun games. No experience needed!
-        </p>
-        <ul class="course-features">
-          <li class="course-feature">✅ Animated piece introductions</li>
-          <li class="course-feature">✅ Story-based learning</li>
-          <li class="course-feature">✅ 2 live sessions / week</li>
-          <li class="course-feature">✅ Fun puzzles & games</li>
-        </ul>
-        <div class="course-footer">
-          <div class="course-price">
-            <div class="amount">₹999</div>
-            <div class="per">per month</div>
-          </div>
-          <a href="#enroll" class="btn btn-outline" id="enroll1">Enroll ✨</a>
+    <!-- Tab Content: Beginner -->
+    <div class="pricing-grid tab-content active reveal" id="beginner" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 700px; margin: 0 auto;">
+      
+      <!-- Buddy Card -->
+      <div class="new-pricing-card gold-border" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👫 Buddy (2 Kids)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹3500*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹4667</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:2 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>Customized Learning Path</li>
+            <li>Personalized Feedback</li>
+            <li>Access to Learning Resources</li>
+          </ul>
+        </div>
+
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll buddy">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
         </div>
       </div>
 
-      <!-- Course 2: Junior Players (7-10) — FEATURED -->
-      <div class="course-card featured reveal" id="course2">
-        <div class="course-ribbon">Most Popular</div>
-        <span class="course-emoji">⚡</span>
-        <div class="course-level">Level 2</div>
-        <div class="course-title">Junior Players</div>
-        <div class="course-age">🧒 Ages 7 – 10</div>
-        <p class="course-desc">
-          The next level! Kids master opening principles, tactical patterns, endgames, 
-          and start participating in friendly online tournaments.
-        </p>
-        <ul class="course-features">
-          <li class="course-feature">✅ Tactics & strategy training</li>
-          <li class="course-feature">✅ 3 live sessions / week</li>
-          <li class="course-feature">✅ Monthly mini-tournaments</li>
-          <li class="course-feature">✅ Game analysis sessions</li>
-        </ul>
-        <div class="course-footer">
-          <div class="course-price">
-            <div class="amount">₹1,499</div>
-            <div class="per">per month</div>
-          </div>
-          <a href="#enroll" class="btn btn-secondary" id="enroll2">Enroll ✨</a>
+      <!-- Individual Card -->
+      <div class="new-pricing-card" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👤 Individual (1:1)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹5500*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
         </div>
-      </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹7333</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
 
-      <!-- Course 3: Rising Champions (11-15) -->
-      <div class="course-card reveal" id="course3">
-        <span class="course-emoji">🦁</span>
-        <div class="course-level">Level 3</div>
-        <div class="course-title">Rising Champions</div>
-        <div class="course-age">👦 Ages 11 – 15</div>
-        <p class="course-desc">
-          Advanced training for serious young players. Deep dive into openings, 
-          middlegame planning, advanced endgames, and competitive tournament prep.
-        </p>
-        <ul class="course-features">
-          <li class="course-feature">✅ Advanced opening repertoire</li>
-          <li class="course-feature">✅ 4 live sessions / week</li>
-          <li class="course-feature">✅ 1-on-1 coaching sessions</li>
-          <li class="course-feature">✅ Tournament entry support</li>
-        </ul>
-        <div class="course-footer">
-          <div class="course-price">
-            <div class="amount">₹1,999</div>
-            <div class="per">per month</div>
-          </div>
-          <a href="#enroll" class="btn btn-outline" id="enroll3">Enroll ✨</a>
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:1 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>100% Individual Focus</li>
+            <li>Tournament Preparation</li>
+            <li>Flexible Session Timings</li>
+          </ul>
         </div>
-      </div>
 
-      <!-- Course 4: Tournament Prep (All ages) -->
-      <div class="course-card tournament reveal" id="course4">
-        <span class="course-emoji">🏆</span>
-        <div class="course-body">
-          <div class="course-level" style="color: var(--orange);">All Levels</div>
-          <div class="course-title">Tournament Prep Bootcamp</div>
-          <div class="course-age">🎯 Ages 7 – 15 | Intensive 4-Week Program</div>
-          <p class="course-desc" style="margin-top:10px;">
-            Supercharge your child's game before big tournaments! Intensive sessions covering openings, tactics, time management, and competitive mindset — perfect for kids ready to compete seriously.
-          </p>
-        </div>
-        <div class="course-footer">
-          <div class="course-price">
-            <div class="amount" style="color: var(--orange);">₹3,499</div>
-            <div class="per">4-week program</div>
-          </div>
-          <a href="#enroll" class="btn btn-secondary" id="enroll4">Enroll 🚀</a>
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
         </div>
       </div>
 
     </div>
+
+    <!-- Tab Content: Intermediate (+5%) -->
+    <div class="pricing-grid tab-content reveal" id="intermediate" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 700px; margin: 0 auto;">
+      
+      <!-- Buddy Card -->
+      <div class="new-pricing-card gold-border" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👫 Buddy (2 Kids)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹3675*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹4900</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:2 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>Opening & Endgame Theory</li>
+            <li>Personalized Feedback</li>
+            <li>Advanced Learning Resources</li>
+          </ul>
+        </div>
+
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll buddy">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
+        </div>
+      </div>
+
+      <!-- Individual Card -->
+      <div class="new-pricing-card" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👤 Individual (1:1)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹5775*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹7700</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:1 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>Middlegame Strategy</li>
+            <li>Tournament Preparation</li>
+            <li>Personal Coaching Log</li>
+          </ul>
+        </div>
+
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tab Content: Advanced (+10%) -->
+    <div class="pricing-grid tab-content reveal" id="advanced" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 700px; margin: 0 auto;">
+      
+      <!-- Buddy Card -->
+      <div class="new-pricing-card gold-border" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👫 Buddy (2 Kids)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹3850*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹5133</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:2 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>Elite Opening Repertoire</li>
+            <li>FIDE Rating Strategy</li>
+            <li>Exclusive Grandmaster Notes</li>
+          </ul>
+        </div>
+
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll buddy">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
+        </div>
+      </div>
+
+      <!-- Individual Card -->
+      <div class="new-pricing-card" style="display: flex; flex-direction: column;">
+        <div class="card-header-icon">👤 Individual (1:1)</div>
+        <div class="session-count">96 live sessions</div>
+        
+        <div class="price-main" style="margin-top: 12px;">
+          <span class="price-val">₹6050*</span>
+          <span class="price-sub">per student/month<br/>billed quarterly</span>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <span class="price-strike">₹8066</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <div class="whats-included" style="margin-bottom: 24px;">
+          <h4>What's included:</h4>
+          <ul class="inclusion-list">
+            <li>Format: 1:1 Sessions</li>
+            <li>8 live sessions per month</li>
+            <li>Professional Game Prep</li>
+            <li>National Tournament Support</li>
+            <li>Daily Puzzles & Analysis</li>
+          </ul>
+        </div>
+
+        <div class="pricing-actions" style="margin-top: auto;">
+          <a href="#enroll" class="btn-enroll">Enroll now</a>
+          <a href="#enroll" class="btn-demo">Book a free demo</a>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </section>
 
@@ -354,7 +442,7 @@
       <div class="why-card reveal" id="why5">
         <div class="why-icon wi-5">🧩</div>
         <div class="why-title">Small Batch Sizes</div>
-        <p class="why-desc">We keep class sizes small (max 8 students) so every child gets personal attention and never gets left behind!</p>
+        <p class="why-desc">We keep class sizes small (max 2 students) so every child gets personal attention and never gets left behind!</p>
       </div>
 
       <div class="why-card reveal" id="why6">
@@ -700,7 +788,7 @@
         <h4>Quick Links</h4>
         <ul class="footer-links">
           <li><a href="#about">About Us</a></li>
-          <li><a href="#courses">Our Courses</a></li>
+          <li><a href="#pricing">Pricing</a></li>
           <li><a href="#why">Why Choose Us</a></li>
           <li><a href="#testimonials">Reviews</a></li>
           <li><a href="#faq">FAQ</a></li>
