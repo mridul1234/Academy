@@ -114,15 +114,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!valid) return;
 
-      // Simulate submission
+      // Collect form data
+      const parentName = document.getElementById('parentName').value.trim();
+      const childName = document.getElementById('childName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const childAge = document.getElementById('childAge').value.trim();
+      const sourceEl = document.getElementById('source');
+      const source = sourceEl ? sourceEl.value : 'Not specified';
+
+      // Build WhatsApp message
+      const message = `🎓 *New Demo Booking - ChessGum*\n\n` +
+        `👤 *Parent's Name:* ${parentName}\n` +
+        `👧 *Child's Name:* ${childName}\n` +
+        `📧 *Email:* ${email}\n` +
+        `📱 *Phone:* ${phone}\n` +
+        `🎂 *Child's Age:* ${childAge}\n` +
+        `📣 *Heard about us from:* ${source}\n\n` +
+        `Please schedule a FREE demo class. Thank you! ♟️`;
+
+      const whatsappUrl = `https://wa.me/918949469929?text=${encodeURIComponent(message)}`;
+
+      // Show success message
       const btn = form.querySelector('.form-submit');
-      btn.textContent = 'Submitting...';
+      btn.textContent = 'Redirecting to WhatsApp...';
       btn.disabled = true;
 
       setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
         form.style.display = 'none';
         successMsg.style.display = 'block';
-      }, 1200);
+      }, 800);
     });
   }
 
