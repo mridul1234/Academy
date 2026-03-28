@@ -942,7 +942,7 @@ a { text-decoration: none; color: inherit; }
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 48px;
   margin-bottom: 48px;
 }
@@ -1024,6 +1024,12 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* --- Desktop footer fix (Programs column removed, now 3 cols) --- */
+.footer-inner {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
 @media (max-width: 1024px) {
   .courses-grid { grid-template-columns: 1fr 1fr; }
   .why-grid { grid-template-columns: 1fr 1fr; }
@@ -1031,42 +1037,130 @@ a { text-decoration: none; color: inherit; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
   .course-card.tournament { grid-template-columns: auto 1fr; }
   .course-card.tournament .course-footer { grid-column: 1 / -1; }
+  .enroll-inner { gap: 32px; }
 }
 
 @media (max-width: 768px) {
+  /* Navbar */
   .nav-inner { justify-content: space-between; padding: 10px 0; }
   .nav-cta { display: inline-flex !important; padding: 8px 16px; font-size: 0.85rem; }
   .logo-text { font-size: 1.1rem; }
 
+  /* Hero */
+  #hero { min-height: auto; max-height: none; padding-top: 80px; padding-bottom: 0; }
   .hero-inner { grid-template-columns: 1fr; text-align: center; padding-top: 20px; }
   .hero-badge { margin: 0 auto 16px; }
-  .hero-title { font-size: 2.2rem; }
+  .hero-title { font-size: 2rem; }
   .hero-desc { margin: 0 auto 24px; font-size: 0.95rem; }
-  .hero-actions { flex-direction: column; gap: 12px; }
+  .hero-actions { flex-direction: column; gap: 12px; align-items: center; }
   .btn { width: 100%; justify-content: center; }
-  .hero-stats { grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
   .hero-image { order: -1; margin-bottom: 20px; }
   .hero-image img { max-width: 280px; margin: 0 auto; }
   .float-badge { display: none; }
 
+  /* Free badge in hero */
+  .hero-left > div[style] { justify-content: center; flex-wrap: wrap; }
+
+  /* About */
   .about-inner { grid-template-columns: 1fr; gap: 32px; }
   .about-image-wrap { order: -1; }
   .section-title { font-size: 1.8rem; }
+  .exp-badge { bottom: -16px; right: -8px; padding: 14px 20px; }
+  .exp-badge .big { font-size: 2rem; }
 
+  /* Pricing */
+  .pricing-grid { max-width: 100% !important; }
+
+  /* Why */
   .why-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Testimonials */
   .testi-grid { grid-template-columns: 1fr; }
+
+  /* Enroll */
+  .enroll-inner { grid-template-columns: 1fr; gap: 32px; }
+  .enroll-left { text-align: center; }
+  .enroll-form-wrap { padding: 32px 24px; }
+
+  /* Form rows stack on mobile */
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+
+  /* Footer */
   .footer-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
-  .footer-logo { justify-content: center; }
-  .social-links { justify-content: center; }
+  .footer-socials { justify-content: center; }
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+
+  /* Scroll to top */
+  #scrollTop { bottom: 20px; right: 20px; width: 44px; height: 44px; font-size: 1.2rem; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 0 16px; }
+
+  /* Hero */
+  .hero-title { font-size: 1.7rem; }
+  .hero-desc { font-size: 0.9rem; }
+  .hero-badge { font-size: 0.78rem; padding: 6px 14px; }
+  .hero-stat .num { font-size: 1.3rem; }
+  .hero-stat .label { font-size: 0.7rem; }
+  .hero-image img { max-width: 220px; }
+
+  /* About */
+  .about-points li { font-size: 0.9rem; }
+  .section-title { font-size: 1.5rem; }
+
+  /* Pricing */
   .new-pricing-card { padding: 20px 16px; }
   .pricing-tab { padding: 8px 16px; font-size: 0.8rem; }
   .price-val { font-size: 1.5rem; }
   .inclusion-list { font-size: 0.75rem; }
   .pricing-actions { flex-direction: column; }
+
+  /* Why */
+  .why-card { padding: 20px 16px; }
+  .why-title { font-size: 1.1rem; }
+  .why-desc { font-size: 0.85rem; }
+
+  /* Testimonials */
+  .testi-card { padding: 20px 16px; }
+  .testi-text { font-size: 0.88rem; }
+
+  /* FAQ */
+  .faq-q { padding: 14px 16px; font-size: 0.88rem; }
+  .faq-a { padding: 0 16px; font-size: 0.88rem; }
+  .faq-item.open .faq-a { padding: 0 16px 20px; }
+  .faq-icon { width: 28px; height: 28px; min-width: 28px; font-size: 1.1rem; }
+
+  /* Enroll */
+  .enroll-form-wrap { padding: 24px 18px; }
+  .form-title { font-size: 1.4rem; }
+  .form-label { font-size: 0.78rem; }
+  .form-input, .form-select, .form-textarea { padding: 12px 14px; font-size: 0.88rem; }
+  .form-submit { font-size: 0.95rem; padding: 14px; }
+  .enroll-perks { gap: 8px; }
+  .enroll-perk { font-size: 0.85rem; }
+
+  /* Footer */
+  .footer-inner { gap: 24px; }
+  #footer { padding: 40px 0 24px; }
+
+  /* Buttons */
+  .btn { padding: 12px 24px; font-size: 0.9rem; }
+}
+
+@media (max-width: 360px) {
+  .container { padding: 0 12px; }
+  .hero-title { font-size: 1.5rem; }
+  .hero-stats { gap: 12px; }
+  .hero-stat .num { font-size: 1.1rem; }
+  .section-title { font-size: 1.3rem; }
+  .new-pricing-card { padding: 16px 12px; }
+  .price-val { font-size: 1.3rem; }
+  .enroll-form-wrap { padding: 20px 14px; }
+  .form-title { font-size: 1.2rem; }
+  .testi-card { padding: 16px 12px; }
+  .why-card { padding: 16px 12px; }
 }
 
 /* ============================================================
