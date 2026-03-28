@@ -696,7 +696,7 @@
         <form id="enrollForm" novalidate>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="parentName">Parent Name</label>
+              <label class="form-label" for="parentName">Parent's Name</label>
               <input class="form-input" type="text" id="parentName" name="parentName" placeholder="e.g. Priya Sharma" required/>
             </div>
             <div class="form-group">
@@ -707,48 +707,31 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="childAge">Child's Age</label>
-              <select class="form-select" id="childAge" name="childAge" required>
-                <option value="" disabled selected>Select age</option>
-                <option>4 years</option>
-                <option>5 years</option>
-                <option>6 years</option>
-                <option>7 years</option>
-                <option>8 years</option>
-                <option>9 years</option>
-                <option>10 years</option>
-                <option>11 years</option>
-                <option>12 years</option>
-                <option>13 years</option>
-                <option>14 years</option>
-                <option>15 years</option>
-              </select>
+              <label class="form-label" for="email">Parent's Email ID</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="e.g. parent@email.com" required/>
             </div>
             <div class="form-group">
-              <label class="form-label" for="level">Interested Course</label>
-              <select class="form-select" id="level" name="level" required>
-                <option value="" disabled selected>Select course</option>
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Advanced</option>
-                <option>Not sure — help me choose</option>
-              </select>
+              <label class="form-label" for="phone">Mobile Number (Preferably WhatsApp)</label>
+              <input class="form-input" type="tel" id="phone" name="phone" placeholder="e.g. +91 98765 43210" required/>
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="email">Email Address</label>
-            <input class="form-input" type="email" id="email" name="email" placeholder="e.g. parent@email.com" required/>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="phone">Phone / WhatsApp</label>
-            <input class="form-input" type="tel" id="phone" name="phone" placeholder="e.g. +91 98765 43210" required/>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="message">Anything else we should know?</label>
-            <textarea class="form-textarea" id="message" name="message" placeholder="e.g. My child has some experience, preferred timings, etc."></textarea>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="childAge">Age of the Student</label>
+              <input class="form-input" type="number" id="childAge" name="childAge" placeholder="e.g. 8" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="source">How did you hear about us?</label>
+              <select class="form-select" id="source" name="source" required>
+                <option value="" disabled selected>Facebook/Instagram etc.</option>
+                <option>Facebook</option>
+                <option>Instagram</option>
+                <option>Google Search</option>
+                <option>Word of Mouth</option>
+                <option>Other</option>
+              </select>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary form-submit" id="submitBtn">
