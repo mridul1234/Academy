@@ -140,6 +140,15 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = 'Redirecting to WhatsApp...';
       btn.disabled = true;
 
+      // Track form submission in GA
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', {
+          event_category: 'Form',
+          event_label: 'Free Trial Booking',
+          value: 1
+        });
+      }
+
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
         form.style.display = 'none';
@@ -190,6 +199,37 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetContent = document.getElementById(targetId);
       if (targetContent) {
         targetContent.classList.add('active');
+
+        // Track tab switch in GA
+        if (typeof gtag === 'function') {
+          gtag('event', 'select_item', {
+            event_category: 'Pricing',
+            event_label: targetId + ' Plan'
+          });
+        }
+      }
+    });
+  });
+
+  /* ---- GA Tracking for Buttons ---- */
+  document.querySelectorAll('.btn-enroll, .btn-demo, #navEnrollBtn, #heroEnrollBtn, #heroCoursesBtn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (typeof gtag === 'function') {
+        let actionName = 'click_button';
+        let labelName = e.target.textContent.trim() || 'Button Click';
+        
+        if (e.target.classList.contains('btn-enroll')) actionName = 'begin_checkout';
+        else if (e.target.classList.contains('btn-demo') || e.target.id === 'navEnrollBtn' || e.target.id === 'heroEnrollBtn') actionName = 'request_demo';
+        
+        // Try to get plan name if it's a pricing card button
+        const planCard = e.target.closest('.new-pricing-card');
+        const planName = planCard ? planCard.querySelector('.card-header-icon').textContent.trim() : 'General';
+        
+        gtag('event', actionName, {
+          event_category: 'Engagement',
+          event_label: labelName,
+          plan_type: planName
+        });
       }
     });
   });
