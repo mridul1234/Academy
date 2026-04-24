@@ -123,24 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const sourceEl = document.getElementById('source');
       const source = sourceEl ? sourceEl.value : 'Not specified';
 
-      // Build WhatsApp message
-      const message = `🎓 *New Demo Booking - ChessGum*\n\n` +
-        `👤 *Parent's Name:* ${parentName}\n` +
-        `👧 *Child's Name:* ${childName}\n` +
-        `📧 *Email:* ${email}\n` +
-        `📱 *Phone:* ${phone}\n` +
-        `🎂 *Child's Age:* ${childAge}\n` +
-        `📣 *Heard about us from:* ${source}\n\n` +
-        `Please schedule a FREE demo class. Thank you! ♟️`;
-
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-
-      // Show success message
+      // Show loading state
       const btn = form.querySelector('.form-submit');
-      btn.textContent = 'Redirecting to WhatsApp...';
+      const originalBtnText = btn.textContent;
+      btn.textContent = 'Sending details...';
       btn.disabled = true;
 
-      // Track form submission in GA
+      // Track form submission attempt in GA
       if (typeof gtag === 'function') {
         gtag('event', 'generate_lead', {
           event_category: 'Form',
@@ -149,11 +138,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
+      // Send data to FormSubmit
+      const formData = new FormData(form);
+      // Adding some metadata for FormSubmit
+      formData.append('_subject', '🎓 New Demo Booking from ' + parentName);
+      formData.append('_captcha', 'false');
+
+      fetch('https://formsubmit.co/ajax/hello.chessgum@gmail.com', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Show success message
         form.style.display = 'none';
         successMsg.style.display = 'block';
-      }, 800);
+      })
+      .catch(error => {
+        console.error('Error submitting form:', error);
+        btn.textContent = 'Error! Try Again';
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.textContent = originalBtnText;
+        }, 3000);
+      });
     });
   }
 
