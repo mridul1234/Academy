@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `📣 *Heard about us from:* ${source}\n\n` +
         `Please schedule a FREE demo class. Thank you! ♟️`;
 
-      const whatsappUrl = `https://wa.me/918949469929?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
       // Show success message
       const btn = form.querySelector('.form-submit');
