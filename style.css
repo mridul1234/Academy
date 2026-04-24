@@ -1154,6 +1154,8 @@ a { text-decoration: none; color: inherit; }
 
   /* Buttons */
   .btn { padding: 12px 24px; font-size: 0.9rem; }
+  .nav-cta { padding: 6px 12px !important; font-size: 0.75rem !important; gap: 4px; }
+  .logo-text { font-size: 1.1rem; }
 }
 
 @media (max-width: 360px) {
