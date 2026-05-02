@@ -99,6 +99,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const formWrap = document.getElementById('enrollFormWrap');
   const successMsg = document.getElementById('formSuccess');
 
+  // -------------------------------------------------------
+  // 🔔 TELEGRAM NOTIFICATION CONFIG
+  //    1. Talk to @BotFather on Telegram → /newbot → copy the token below
+  //    2. Send any message to your bot, then open:
+  //       https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+  //       Copy the "id" value from "chat" → paste as TELEGRAM_CHAT_ID
+  // -------------------------------------------------------
+  const TELEGRAM_BOT_TOKEN = '8593407632:AAG2GPLGw2nALnP_lNSdBp-lI34BBSck4XU';
+  const TELEGRAM_CHAT_ID   = '8147525276';
+
+  function sendTelegramNotification(parentName, childName, email, phone, childAge, source) {
+    if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') return; // not configured yet
+
+    const message =
+      `🎓 *New Demo Booking — ChessGum!*\n\n` +
+      `👨‍👩‍👦 *Parent:* ${parentName}\n` +
+      `👦 *Child:* ${childName} (Age ${childAge})\n` +
+      `📧 *Email:* ${email}\n` +
+      `📱 *Phone:* ${phone}\n` +
+      `📣 *Source:* ${source}`;
+
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+      })
+    }).catch(err => console.warn('Telegram notification failed:', err));
+  }
+
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -153,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(response => response.json())
       .then(data => {
+        // 🔔 Fire Telegram notification (non-blocking)
+        sendTelegramNotification(parentName, childName, email, phone, childAge, source);
+
         // Show success message
         form.style.display = 'none';
         successMsg.style.display = 'block';
