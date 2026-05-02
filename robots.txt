@@ -1,0 +1,8 @@
+# robots.txt for ChessGum
+# Tells search engine crawlers the rules for this site
+
+User-agent: *
+Allow: /
+
+# Sitemap location — update this with your real domain!
+Sitemap: https://www.chessgum.com/sitemap.xml
