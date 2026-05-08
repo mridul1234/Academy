@@ -280,4 +280,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ---- Geo-based Pricing (IP Geolocation) ---- */
+  function applyRegionalPricing(isIndia) {
+    const key = isIndia ? 'india' : 'intl';
+    document.querySelectorAll('.price-val[data-india], .price-strike[data-india]').forEach(el => {
+      el.textContent = el.dataset[key];
+    });
+  }
+
+  fetch('https://ipapi.co/json/')
+    .then(res => res.json())
+    .then(data => {
+      const isIndia = data.country_code === 'IN';
+      applyRegionalPricing(isIndia);
+    })
+    .catch(() => {
+      // On error, default to India pricing (already shown in HTML)
+    });
+
 });
