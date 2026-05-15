@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "chessgum.com" }],
+      "destination": "https://www.chessgum.com/$1",
+      "permanent": true
+    }
+  ]
+}
