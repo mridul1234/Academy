@@ -12,5 +12,11 @@
       "destination": "https://www.chessgum.com/$1",
       "permanent": true
     }
-  ]
+  ],
+  "rewrites": [
+    { "source": "/about",   "destination": "/about.html"   },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/contact", "destination": "/contact.html" }
+  ],
+  "cleanUrls": true
 }
