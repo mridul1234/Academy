@@ -1053,11 +1053,11 @@ a { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 768px) {
-  /* Navbar */
+  /* Navbar — Logo | CTA | Burger */
   .nav-inner { justify-content: space-between; padding: 10px 0; }
   .nav-links { display: none !important; }
   .burger { display: flex !important; }
-  .nav-cta { padding: 8px 14px; font-size: 0.82rem; margin-left: 0 !important; }
+  .nav-cta { display: inline-flex !important; padding: 9px 16px !important; font-size: 0.82rem !important; margin-left: 0 !important; }
   .logo-text { font-size: 1.1rem; }
 
   /* Hero */
@@ -1159,8 +1159,8 @@ a { text-decoration: none; color: inherit; }
   .footer-inner { gap: 24px; }
   #footer { padding: 40px 0 24px; }
 
-  /* Navbar on small phones — hide CTA, just show logo + burger */
-  .nav-cta { display: none !important; }
+  /* Navbar on small phones — keep CTA but very compact */
+  .nav-cta { display: inline-flex !important; padding: 7px 10px !important; font-size: 0.72rem !important; }
   .logo-text { font-size: 1.1rem; }
 }
 
