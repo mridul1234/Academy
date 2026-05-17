@@ -11,14 +11,108 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="ChessGum — The #1 Online Chess Academy for Kids aged 4–15. Learn chess from expert coaches, compete in tournaments, and develop critical thinking skills."/>
-  <meta name="keywords" content="chess academy for kids, online chess classes, children chess lessons, learn chess online"/>
-  <title>ChessGum | Online Chess Academy for Kids</title>
+  <meta name="description" content="ChessGum — India's #1 Online Chess Academy for Kids aged 4–15. Expert coaches, live sessions, 96+ classes/year. Book your FREE demo class today!"/>
+  <meta name="keywords" content="chess academy for kids, online chess classes India, children chess lessons, learn chess online, chess coaching for kids"/>
+  <title>ChessGum | #1 Online Chess Academy for Kids in India</title>
   <link rel="canonical" href="https://www.chessgum.com/"/>
+
+  <!-- Open Graph (Facebook / WhatsApp previews) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://www.chessgum.com/"/>
+  <meta property="og:title" content="ChessGum | #1 Online Chess Academy for Kids in India"/>
+  <meta property="og:description" content="Expert online chess coaching for kids aged 4–15. Live classes, small batches, 98% parent approval. Book a FREE demo class!"/>
+  <meta property="og:image" content="https://www.chessgum.com/chess_kids_hero_1774517379178.png"/>
+  <meta property="og:site_name" content="ChessGum"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="ChessGum | #1 Online Chess Academy for Kids in India"/>
+  <meta name="twitter:description" content="Expert online chess coaching for kids aged 4–15. Live classes, small batches, 98% parent approval. Book a FREE demo class!"/>
+  <meta name="twitter:image" content="https://www.chessgum.com/chess_kids_hero_1774517379178.png"/>
+
   <link rel="stylesheet" href="style.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "ChessGum",
+    "url": "https://www.chessgum.com",
+    "logo": "https://www.chessgum.com/chessgum_logo.png",
+    "description": "India's #1 online chess academy for kids aged 4 to 15. Live sessions, expert coaches, small batches.",
+    "email": "hello.chessgum@gmail.com",
+    "foundingDate": "2020",
+    "sameAs": ["https://www.chessgum.com"],
+    "offers": {
+      "@type": "Offer",
+      "name": "Free Demo Chess Class",
+      "price": "0",
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <!-- FAQ Schema (rich snippets in Google) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "My child is only 4 years old — is chess not too early for them?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not at all! Age 4 is actually a wonderful time to start chess. Our beginner program uses stories, colorful pieces, and games to introduce chess concepts in a way that's completely natural for a 4-year-old brain."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do my child and I need any prior chess knowledge?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Zero prior knowledge needed! Our beginner program starts from absolute scratch — we teach the names of pieces, how they move, and simple rules in the most fun way possible."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many students are in each batch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We strictly limit batches to a maximum of 2 students per class. This ensures every child receives personal attention from the coach and never feels lost or overlooked."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I get a free trial class before enrolling?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely! We offer a FREE 1-hour trial class for all new students. No credit card required. Fill out the enrollment form and our team will schedule within 24 hours."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the duration of each online class?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each group and buddy session is 55 minutes while the individual (1:1) session is 45 minutes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if my child misses a class?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If cancelled at least 1 hour in advance, the class is carried forward without deduction. If missed without prior notice, the session count is deducted."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -29,12 +123,30 @@
 <nav id="navbar">
   <div class="container">
     <div class="nav-inner">
-      <a href="#hero" class="nav-logo" id="logo">
+      <a href="/" class="nav-logo" id="logo">
         <img src="chessgum_logo.png" alt="ChessGum Logo" class="logo-img"/>
         <div class="logo-text">Chess<span>Gum</span></div>
       </a>
 
-      <a href="#enroll" class="btn btn-primary nav-cta" id="navEnrollBtn" style="display: inline-flex !important;">🎓 Book a Free Demo</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="about.html">About</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="contact.html" class="btn btn-primary nav-cta" id="navEnrollBtn">🎓 Book a Free Demo</a>
+        <button class="burger" id="burger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="about.html">About Us</a>
+      <a href="pricing.html">Pricing &amp; Plans</a>
+      <a href="contact.html">Contact Us</a>
+      <a href="contact.html" class="btn btn-primary" style="text-align:center;justify-content:center;">🎓 Book a Free Demo</a>
     </div>
   </div>
 </nav>
@@ -777,9 +889,9 @@
       <div class="footer-col">
         <h4>Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#why">Why Choose Us</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="pricing.html">Pricing &amp; Plans</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
           <li><a href="#testimonials">Reviews</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>

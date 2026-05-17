@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChessGum – International Pricing Brochure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple: #6C2BD9;
+      --purple-deep: #4C1D95;
+      --purple-light: #EDE9FE;
+      --gold: #F59E0B;
+      --gold-light: #FEF9ED;
+      --green: #10B981;
+      --dark: #1E1B4B;
+      --mid: #4B5563;
+      --white: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #F3F0FF;
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ── PRINT BUTTON ── */
+    .print-bar {
+      background: var(--dark);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+    }
+    .print-bar span { color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 600; }
+    .btn-pdf {
+      background: linear-gradient(135deg, var(--gold), #FBBF24);
+      color: #1E1B4B;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 0.95rem;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(245,158,11,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-pdf:hover { transform: scale(1.04); box-shadow: 0 6px 24px rgba(245,158,11,0.5); }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: 0 0 60px rgba(108,43,217,0.15);
+    }
+
+    /* ── HEADER BAND ── */
+    .header-band {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4C1D95 100%);
+      padding: 44px 48px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-band::before {
+      content: '';
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 280px; height: 280px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .header-band::after {
+      content: '';
+      position: absolute;
+      right: 60px; bottom: -80px;
+      width: 180px; height: 180px;
+      background: rgba(245,158,11,0.08);
+      border-radius: 50%;
+    }
+
+    .hb-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-row img { height: 48px; border-radius: 10px; }
+    .logo-text {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 2rem;
+      color: #fff;
+    }
+    .logo-text span { color: var(--gold); }
+    .intl-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245,158,11,0.18);
+      border: 1.5px solid rgba(245,158,11,0.5);
+      color: #FCD34D;
+      font-weight: 800;
+      font-size: 0.82rem;
+      padding: 6px 16px;
+      border-radius: 50px;
+      letter-spacing: 0.3px;
+    }
+
+    .hb-body h1 {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.8rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .hb-body h1 span { color: var(--gold); }
+    .hb-body p {
+      color: rgba(255,255,255,0.72);
+      font-size: 1rem;
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    .hb-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .hb-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .hb-stat .num {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .hb-stat .lbl { color: rgba(255,255,255,0.6); font-size: 0.78rem; font-weight: 700; margin-top: 2px; }
+
+    /* ── TIER LABEL ── */
+    .tier-bar {
+      background: var(--purple-light);
+      padding: 14px 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 3px solid var(--purple);
+    }
+    .tier-bar .tier-pill {
+      background: var(--purple);
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.82rem;
+      padding: 5px 16px;
+      border-radius: 50px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .tier-bar .tier-title {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 1.3rem;
+      color: var(--purple);
+    }
+    .tier-bar .tier-sub {
+      margin-left: auto;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--mid);
+    }
+
+    /* ── CARDS SECTION ── */
+    .cards-section {
+      padding: 36px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid #E5E7EB;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(108,43,217,0.15); }
+    .card.featured { border-color: var(--gold); border-width: 2.5px; }
+
+    .card-top {
+      padding: 22px 24px 18px;
+      background: linear-gradient(135deg, var(--purple), #8B5CF6);
+      color: #fff;
+      position: relative;
+    }
+    .card.featured .card-top {
+      background: linear-gradient(135deg, #D97706, #F59E0B);
+    }
+    .popular-ribbon {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: #fff;
+      color: #D97706;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .ct-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .ct-title { font-family: 'Fredoka One', sans-serif; font-size: 1.45rem; }
+    .ct-format { font-size: 0.78rem; font-weight: 700; opacity: 0.82; margin-top: 2px; }
+
+    .card-body { padding: 22px 24px; flex: 1; display: flex; flex-direction: column; }
+
+    /* Price block */
+    .price-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--mid);
+      margin-bottom: 6px;
+    }
+    .price-monthly-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .price-monthly {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 2.4rem;
+      color: var(--purple);
+      line-height: 1;
+    }
+    .card.featured .price-monthly { color: #D97706; }
+    .price-mo-sub {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--mid);
+      line-height: 1.4;
+      padding-bottom: 4px;
+    }
+
+    .quarterly-box {
+      background: var(--purple-light);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card.featured .quarterly-box { background: var(--gold-light); }
+    .qb-left .qb-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--mid);
+    }
+    .qb-left .qb-calc {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--mid);
+      margin-top: 2px;
+    }
+    .qb-right .qb-total {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 1.55rem;
+      color: var(--purple);
+      text-align: right;
+      line-height: 1;
+    }
+    .card.featured .qb-right .qb-total { color: #D97706; }
+    .qb-right .qb-note {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--mid);
+      text-align: right;
+    }
+
+    .strike-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .price-strike { text-decoration: line-through; color: #9CA3AF; font-size: 0.9rem; font-weight: 700; }
+    .save-tag {
+      background: #DCFCE7;
+      color: #065F46;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .divider { border: none; border-top: 1px solid #F3F4F6; margin: 16px 0; }
+
+    .inc-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--mid);
+      margin-bottom: 10px;
+    }
+    .inc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .inc-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; font-weight: 700; color: var(--dark);
+    }
+    .check {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), #8B5CF6);
+      color: #fff; font-size: 0.6rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card.featured .check { background: linear-gradient(135deg, #D97706, var(--gold)); }
+
+    .card-actions { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .btn-enroll {
+      display: block; text-align: center; text-decoration: none;
+      background: linear-gradient(135deg, var(--purple), #8B5CF6);
+      color: #fff; padding: 13px; border-radius: 12px;
+      font-weight: 800; font-size: 0.93rem;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .card.featured .btn-enroll { background: linear-gradient(135deg, #D97706, var(--gold)); }
+    .btn-enroll:hover { opacity: 0.88; transform: scale(1.02); }
+    .btn-demo {
+      display: block; text-align: center; text-decoration: none;
+      border: 2px solid var(--purple); color: var(--purple);
+      padding: 11px; border-radius: 12px; font-weight: 800; font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+    .card.featured .btn-demo { border-color: #D97706; color: #D97706; }
+    .btn-demo:hover { background: var(--purple-light); }
+
+    /* ── FEATURES ROW ── */
+    .features-row {
+      border-top: 2px solid #F3F4F6;
+      padding: 28px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .feat-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--purple-light); font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-label { font-size: 0.78rem; font-weight: 800; color: var(--dark); }
+    .feat-sub { font-size: 0.72rem; font-weight: 600; color: var(--mid); }
+
+    /* ── NOTE ── */
+    .note-section {
+      background: #F9FAFB;
+      border-top: 1px solid #E5E7EB;
+      padding: 22px 48px;
+    }
+    .note-section p {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+    .note-section strong { color: var(--dark); }
+
+    /* ── FOOTER ── */
+    .footer-band {
+      background: var(--dark);
+      padding: 22px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-band .fb-left { color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; }
+    .footer-band .fb-left strong { color: #fff; }
+    .footer-band .fb-right { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-band a {
+      color: var(--gold); font-size: 0.8rem; font-weight: 700; text-decoration: none;
+    }
+
+    /* ── PRINT / PDF ── */
+    @page {
+      size: A4 landscape;
+      margin: 8mm 10mm;
+    }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .print-bar { display: none !important; }
+      body { background: #fff !important; margin: 0; }
+      .page {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      .card:hover { transform: none !important; box-shadow: none !important; }
+
+      /* Scale everything down to fit one page */
+      .header-band { padding: 16px 28px 12px !important; }
+      .hb-top { margin-bottom: 10px !important; }
+      .logo-row img { height: 34px !important; }
+      .logo-text { font-size: 1.4rem !important; }
+      .hb-body h1 { font-size: 1.5rem !important; margin-bottom: 4px !important; }
+      .hb-body p { font-size: 0.78rem !important; }
+      .hb-stats { margin-top: 10px !important; gap: 20px !important; }
+      .hb-stat .num { font-size: 1.1rem !important; }
+      .hb-stat .lbl { font-size: 0.65rem !important; }
+
+      .tier-bar { padding: 8px 28px !important; }
+      .tier-bar .tier-title { font-size: 1rem !important; }
+      .tier-bar .tier-sub { font-size: 0.7rem !important; }
+
+      .cards-section { padding: 14px 28px !important; gap: 16px !important; }
+      .card-top { padding: 12px 16px 10px !important; }
+      .ct-icon { font-size: 1.1rem !important; margin-bottom: 2px !important; }
+      .ct-title { font-size: 1.1rem !important; }
+      .ct-format { font-size: 0.68rem !important; }
+      .popular-ribbon { font-size: 0.6rem !important; padding: 3px 8px !important; top: 10px !important; right: 10px !important; }
+
+      .card-body { padding: 12px 16px !important; }
+      .price-monthly { font-size: 1.7rem !important; }
+      .price-mo-sub { font-size: 0.68rem !important; }
+      .quarterly-box { padding: 8px 12px !important; margin: 8px 0 !important; border-radius: 8px !important; }
+      .qb-label { font-size: 0.62rem !important; }
+      .qb-calc { font-size: 0.7rem !important; }
+      .qb-total { font-size: 1.1rem !important; }
+      .qb-note { font-size: 0.62rem !important; }
+      .strike-row { margin-bottom: 2px !important; }
+      .price-strike { font-size: 0.75rem !important; }
+      .save-tag { font-size: 0.62rem !important; padding: 2px 7px !important; }
+      .divider { margin: 8px 0 !important; }
+      .inc-title { font-size: 0.62rem !important; margin-bottom: 6px !important; }
+      .inc-list { gap: 5px !important; }
+      .inc-list li { font-size: 0.74rem !important; gap: 6px !important; }
+      .check { width: 15px !important; height: 15px !important; font-size: 0.5rem !important; }
+
+      .footer-band { padding: 10px 28px !important; }
+      .footer-band .fb-left { font-size: 0.7rem !important; }
+      .footer-band a { font-size: 0.7rem !important; }
+      .footer-band .fb-right { gap: 12px !important; }
+    }
+
+    @media (max-width: 680px) {
+      .cards-section { grid-template-columns: 1fr; padding: 28px 20px; }
+      .header-band { padding: 32px 24px; }
+      .tier-bar { padding: 14px 24px; }
+      .features-row { grid-template-columns: repeat(2,1fr); padding: 24px 24px; }
+      .note-section, .footer-band { padding: 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Print Bar -->
+<div class="print-bar">
+  <span>📄 Ready to share with parents?</span>
+  <button class="btn-pdf" onclick="window.print()">💾 Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header-band">
+    <div class="hb-top">
+      <div class="logo-row">
+        <img src="chessgum_logo.png" alt="ChessGum Logo"/>
+        <div class="logo-text">Chess<span>Gum</span></div>
+      </div>
+  
+    </div>
+    <div class="hb-body">
+      <h1>Invest in Your Child's <span>Chess Journey</span> ♟️</h1>
+      <p>Premium live online chess coaching for kids aged 4–15, designed by expert coaches. Quarterly billing with a 25% saving.</p>
+    </div>
+    <div class="hb-stats">
+      <div class="hb-stat"><span class="num">1000+</span><span class="lbl">Kids Taught</span></div>
+      <div class="hb-stat"><span class="num">5+</span><span class="lbl">Years Running</span></div>
+      <div class="hb-stat"><span class="num">98%</span><span class="lbl">Parent Approval</span></div>
+      <div class="hb-stat"><span class="num">200+</span><span class="lbl">Tournaments Won</span></div>
+    </div>
+  </div>
+
+  <!-- TIER LABEL -->
+  <div class="tier-bar">
+    <span class="tier-pill">Beginner</span>
+    <span class="tier-title">Starting Strong — For Ages 4 to 10</span>
+    <span class="tier-sub">8 live sessions / month &nbsp;·&nbsp; Billed quarterly</span>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-section">
+
+    <!-- ── BUDDY ── -->
+    <div class="card featured">
+      <div class="card-top">
+        <div class="popular-ribbon">⭐ Popular</div>
+        <div class="ct-icon">👫</div>
+        <div class="ct-title">Buddy Plan</div>
+        <div class="ct-format">1:2 Sessions — 2 Kids per batch</div>
+      </div>
+      <div class="card-body">
+        <div class="price-monthly-row">
+          <div class="price-monthly">₹5,500</div>
+          <div class="price-mo-sub">per student<br/>per month</div>
+        </div>
+
+        <div class="quarterly-box">
+          <div class="qb-left">
+            <div class="qb-label">Quarterly Total</div>
+            <div class="qb-calc">₹5,500 × 3 months</div>
+          </div>
+          <div class="qb-right">
+            <div class="qb-total">₹16,500</div>
+            <div class="qb-note">billed once</div>
+          </div>
+        </div>
+
+        <div class="strike-row">
+          <span class="price-strike">₹22,000</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <hr class="divider"/>
+        <div class="inc-title">What's included</div>
+        <ul class="inc-list">
+          <li><span class="check">✓</span>Format: 1:2 sessions (max 2 kids)</li>
+          <li><span class="check">✓</span>8 live sessions per month (55 mins each)</li>
+          <li><span class="check">✓</span>Customized Learning Path</li>
+          <li><span class="check">✓</span>Personalized Feedback</li>
+          <li><span class="check">✓</span>Access to Learning Resources</li>
+          <li><span class="check">✓</span>Monthly Progress Report</li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- ── INDIVIDUAL ── -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ct-icon">👤</div>
+        <div class="ct-title">Individual Plan</div>
+        <div class="ct-format">1:1 Sessions — Exclusive focus</div>
+      </div>
+      <div class="card-body">
+        <div class="price-monthly-row">
+          <div class="price-monthly">₹8,500</div>
+          <div class="price-mo-sub">per student<br/>per month</div>
+        </div>
+
+        <div class="quarterly-box">
+          <div class="qb-left">
+            <div class="qb-label">Quarterly Total</div>
+            <div class="qb-calc">₹8,500 × 3 months</div>
+          </div>
+          <div class="qb-right">
+            <div class="qb-total">₹25,500</div>
+            <div class="qb-note">billed once</div>
+          </div>
+        </div>
+
+        <div class="strike-row">
+          <span class="price-strike">₹34,000</span>
+          <span class="save-tag">Save 25%</span>
+        </div>
+
+        <hr class="divider"/>
+        <div class="inc-title">What's included</div>
+        <ul class="inc-list">
+          <li><span class="check">✓</span>Format: 1:1 sessions (dedicated coach)</li>
+          <li><span class="check">✓</span>8 live sessions per month (45 mins each)</li>
+          <li><span class="check">✓</span>100% Individual Focus</li>
+          <li><span class="check">✓</span>Tournament Preparation</li>
+          <li><span class="check">✓</span>Flexible Session Timings</li>
+          <li><span class="check">✓</span>Monthly Progress Report</li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  <!-- FOOTER -->
+  <div class="footer-band">
+    <div class="fb-left">
+      <strong>ChessGum</strong> — Online Chess Academy for Kids &nbsp;·&nbsp; Nurturing champions since 2020 🏆
+    </div>
+    <div class="fb-right">
+      <a href="mailto:hello.chessgum@gmail.com">📧 hello.chessgum@gmail.com</a>
+      <a href="https://chessgum.com">🌐 chessgum.com</a>
+      <a href="https://wa.me/">💬 WhatsApp</a>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+</body>
+</html>

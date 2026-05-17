@@ -224,7 +224,8 @@ a { text-decoration: none; color: inherit; }
 .nav-links a:hover { color: var(--purple); }
 .nav-links a:hover::after { width: 100%; }
 
-.nav-cta { margin-left: 16px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-cta { margin-left: 4px; }
 
 /* Burger */
 .burger {

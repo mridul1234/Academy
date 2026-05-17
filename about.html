@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WJ5986RVDL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WJ5986RVDL');
+  </script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Learn about ChessGum — founded in 2020, we've taught 1000+ kids chess online. Meet our mission, coaching philosophy, and the story behind India's favourite kids chess academy."/>
+  <meta name="keywords" content="about ChessGum, chess academy India, online chess coaching story, kids chess school"/>
+  <title>About Us | ChessGum — Online Chess Academy for Kids</title>
+  <link rel="canonical" href="https://www.chessgum.com/about.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://www.chessgum.com/about.html"/>
+  <meta property="og:title" content="About ChessGum | India's Chess Academy for Kids"/>
+  <meta property="og:description" content="Founded in 2020, ChessGum has taught 1000+ kids chess online. Learn our story, mission, and coaching philosophy."/>
+  <meta property="og:image" content="https://www.chessgum.com/chess_kids_about_1774517397179.png"/>
+  <meta property="og:site_name" content="ChessGum"/>
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About ChessGum",
+    "url": "https://www.chessgum.com/about.html",
+    "description": "ChessGum is India's #1 online chess academy for kids aged 4-15, founded in 2020.",
+    "publisher": {
+      "@type": "EducationalOrganization",
+      "name": "ChessGum",
+      "url": "https://www.chessgum.com",
+      "logo": "https://www.chessgum.com/chessgum_logo.png"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* Page-specific styles */
+    .page-hero {
+      background: linear-gradient(135deg, #F3EEFF 0%, #FFF8E7 50%, #EEF6FF 100%);
+      padding: 140px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero .shape { position: absolute; border-radius: 50%; opacity: 0.1; }
+    .page-hero .shape-a { width: 300px; height: 300px; background: var(--purple); top: -80px; right: -60px; }
+    .page-hero .shape-b { width: 200px; height: 200px; background: var(--yellow); bottom: -60px; left: -60px; }
+    .page-hero-tag { display: inline-block; background: var(--yellow-light); color: var(--purple-dark); font-weight: 800; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 18px; border-radius: 100px; margin-bottom: 16px; }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); color: var(--text-dark); margin-bottom: 16px; }
+    .page-hero p { font-size: 1.05rem; color: var(--text-mid); max-width: 580px; margin: 0 auto; line-height: 1.7; }
+
+    /* Story section */
+    .story-section { padding: 80px 0; background: white; }
+    .story-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; }
+    .story-img-wrap { position: relative; }
+    .story-img-wrap img { width: 100%; border-radius: 32px; box-shadow: var(--shadow-soft); }
+    .story-badge { position: absolute; bottom: -24px; right: -24px; background: var(--purple); color: white; border-radius: 20px; padding: 20px 28px; text-align: center; box-shadow: 0 8px 32px rgba(108,63,212,0.4); }
+    .story-badge .big { font-family: 'Fredoka One', cursive; font-size: 2.8rem; line-height: 1; }
+    .story-badge .small { font-size: 0.85rem; font-weight: 700; opacity: 0.85; }
+
+    /* Timeline */
+    .timeline-section { padding: 80px 0; background: var(--bg-light); }
+    .timeline { max-width: 700px; margin: 0 auto; position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 28px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, var(--purple), var(--yellow)); border-radius: 3px; }
+    .timeline-item { display: flex; gap: 28px; margin-bottom: 40px; align-items: flex-start; }
+    .timeline-dot { width: 60px; min-width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 16px rgba(108,63,212,0.35); z-index: 1; }
+    .timeline-content { background: white; border-radius: 20px; padding: 24px 28px; box-shadow: var(--shadow-card); flex: 1; margin-top: 8px; }
+    .timeline-year { font-family: 'Fredoka One', cursive; color: var(--purple); font-size: 1rem; margin-bottom: 4px; }
+    .timeline-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--text-dark); margin-bottom: 8px; }
+    .timeline-desc { font-size: 0.92rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* Mission cards */
+    .mission-section { padding: 80px 0; background: white; }
+    .mission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .mission-card { background: var(--bg-light); border-radius: 28px; padding: 36px 28px; text-align: center; border: 2px solid transparent; transition: all 0.3s; }
+    .mission-card:hover { transform: translateY(-6px); border-color: var(--purple-light); background: white; box-shadow: var(--shadow-card); }
+    .mission-icon { width: 72px; height: 72px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px; }
+    .mi-1 { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
+    .mi-2 { background: linear-gradient(135deg, #FEF9C3, #FDE68A); }
+    .mi-3 { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
+    .mission-card h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--text-dark); margin-bottom: 12px; }
+    .mission-card p { font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
+
+    /* Stats banner */
+    .stats-banner { background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%); padding: 60px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+    .stat-box { color: white; }
+    .stat-box .num { font-family: 'Fredoka One', cursive; font-size: 2.8rem; line-height: 1; margin-bottom: 8px; }
+    .stat-box .label { font-size: 0.9rem; font-weight: 700; opacity: 0.85; }
+
+    /* Coaches */
+    .coaches-section { padding: 80px 0; background: var(--bg-light); }
+    .coaches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 48px; }
+    .coach-card { background: white; border-radius: 28px; padding: 32px 24px; text-align: center; box-shadow: var(--shadow-card); transition: all 0.3s; }
+    .coach-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(108,63,212,0.15); }
+    .coach-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px; font-weight: 900; color: white; }
+    .ca-1 { background: linear-gradient(135deg, var(--purple), var(--purple-light)); }
+    .ca-2 { background: linear-gradient(135deg, var(--orange), var(--yellow)); }
+    .ca-3 { background: linear-gradient(135deg, var(--green), #16A34A); }
+    .coach-name { font-family: 'Fredoka One', cursive; font-size: 1.25rem; color: var(--text-dark); margin-bottom: 4px; }
+    .coach-title { font-size: 0.82rem; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .coach-desc { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* CTA section */
+    .about-cta { padding: 80px 0; background: linear-gradient(135deg, #F3EEFF 0%, #FFF8E7 100%); text-align: center; }
+    .about-cta h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 16px; }
+    .about-cta p { color: var(--text-mid); max-width: 500px; margin: 0 auto 32px; font-size: 1rem; }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .mission-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .coaches-grid { grid-template-columns: 1fr; }
+      .timeline::before { left: 24px; }
+      .timeline-dot { width: 48px; min-width: 48px; height: 48px; font-size: 1.1rem; }
+      .story-badge { bottom: -16px; right: -8px; padding: 14px 20px; }
+      .story-badge .big { font-size: 2rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .stat-box .num { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" id="logo">
+        <img src="chessgum_logo.png" alt="ChessGum Logo" class="logo-img"/>
+        <div class="logo-text">Chess<span>Gum</span></div>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="about.html" style="color:var(--purple);">About</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="contact.html" class="btn btn-primary nav-cta" id="navEnrollBtn">🎓 Book a Free Demo</a>
+        <button class="burger" id="burger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="about.html">About Us</a>
+      <a href="pricing.html">Pricing &amp; Plans</a>
+      <a href="contact.html">Contact Us</a>
+      <a href="contact.html" class="btn btn-primary" style="text-align:center;justify-content:center;">🎓 Book a Free Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="shape shape-a"></div>
+  <div class="shape shape-b"></div>
+  <div class="container">
+    <div class="page-hero-tag">Our Story</div>
+    <h1>About ChessGum — India's Chess Academy for Kids ♟️</h1>
+    <p>We started with one simple belief: every child deserves the joy of chess. Since 2020, we've been turning that belief into action — one young champion at a time.</p>
+  </div>
+</section>
+
+<!-- STORY SECTION -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-img-wrap reveal">
+        <img src="chess_kids_about_1774517397179.png" alt="Children learning chess online at ChessGum" loading="lazy"/>
+        <div class="story-badge">
+          <div class="big">5+</div>
+          <div class="small">Years of<br/>Excellence</div>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <span class="section-tag">Who We Are</span>
+        <h2 class="section-title">Where Chess Meets Childhood Wonder ♟️</h2>
+        <p style="color:var(--text-mid);font-size:1rem;line-height:1.8;margin-bottom:16px;">
+          <strong>ChessGum</strong> was founded in 2020 with a simple but powerful idea: chess is one of the greatest tools for developing a child's mind — and it should be accessible, fun, and age-appropriate for every kid, even a 4-year-old.
+        </p>
+        <p style="color:var(--text-mid);font-size:1rem;line-height:1.8;margin-bottom:16px;">
+          What started as small batches of curious kids has grown into a thriving online academy with over <strong>1,000 students</strong>, coaches across India, and young players competing in national and international tournaments.
+        </p>
+        <p style="color:var(--text-mid);font-size:1rem;line-height:1.8;">
+          We're not just a chess school. We're a community that believes in the power of strategic thinking, patience, and the joy of saying "checkmate!" for the very first time.
+        </p>
+        <ul class="about-points" style="margin-top:24px;">
+          <li>
+            <div class="point-icon pi-green">🌱</div>
+            <div>Age-appropriate curriculum from tiny tots (age 4) to competitive teens (age 15)</div>
+          </li>
+          <li>
+            <div class="point-icon pi-purple">🧠</div>
+            <div>Proven to improve concentration, memory, and academic performance</div>
+          </li>
+          <li>
+            <div class="point-icon pi-yellow">🏆</div>
+            <div>200+ tournament wins — school district, state level, and national competitions</div>
+          </li>
+          <li>
+            <div class="point-icon pi-blue">💻</div>
+            <div>100% online — live classes from home, any device, any city in the world</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BANNER -->
+<div class="stats-banner">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-box reveal">
+        <div class="num">1000+</div>
+        <div class="label">Kids Taught</div>
+      </div>
+      <div class="stat-box reveal">
+        <div class="num">5+</div>
+        <div class="label">Years Running</div>
+      </div>
+      <div class="stat-box reveal">
+        <div class="num">98%</div>
+        <div class="label">Parent Approval</div>
+      </div>
+      <div class="stat-box reveal">
+        <div class="num">200+</div>
+        <div class="label">Tournaments Won</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSION SECTION -->
+<section class="mission-section">
+  <div class="container">
+    <div style="text-align:center;">
+      <span class="section-tag">Our Mission</span>
+      <h2 class="section-title">Three Pillars of Everything We Do 🎯</h2>
+      <p class="section-sub">Every decision we make — from curriculum design to how we pick our coaches — is guided by these three core beliefs.</p>
+    </div>
+    <div class="mission-grid">
+      <div class="mission-card reveal">
+        <div class="mission-icon mi-1">🎮</div>
+        <h3>Fun First, Always</h3>
+        <p>Learning should feel like play. Our curriculum uses stories, animations, puzzles, and games to make every session feel exciting — never like homework. A child who loves learning will always learn more.</p>
+      </div>
+      <div class="mission-card reveal">
+        <div class="mission-icon mi-2">🧠</div>
+        <h3>Build Real Skills</h3>
+        <p>Chess is our vehicle, but critical thinking, patience, and problem-solving are the destination. Parents consistently tell us their child's focus in school has improved dramatically after joining ChessGum.</p>
+      </div>
+      <div class="mission-card reveal">
+        <div class="mission-icon mi-3">🌱</div>
+        <h3>Every Child Matters</h3>
+        <p>We cap every class at 2 students maximum. No child gets left behind or overlooked. Every session, every coach, every feedback report is designed to make your child feel seen and celebrated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY TIMELINE -->
+<section class="timeline-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;">
+      <span class="section-tag">Our Journey</span>
+      <h2 class="section-title">5 Years of Growing Together 📅</h2>
+      <p class="section-sub">From our first class to 1000+ students — here's how ChessGum grew.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">♟️</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2020</div>
+          <div class="timeline-title">ChessGum is Born</div>
+          <p class="timeline-desc">We launched our first online classes with just a handful of students and a big dream — to make chess accessible and fun for every kid in India, regardless of where they live.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🏅</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2021</div>
+          <div class="timeline-title">First Tournament Wins</div>
+          <p class="timeline-desc">Our students started competing in school-level chess tournaments — and winning! This validated our teaching approach and fueled our passion to take things further.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2022</div>
+          <div class="timeline-title">Curriculum Expansion</div>
+          <p class="timeline-desc">We launched our structured 3-tier curriculum — Beginner, Intermediate, and Advanced — with custom learning paths for every age group from 4 to 15 years old.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🌍</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2023</div>
+          <div class="timeline-title">Going Global</div>
+          <p class="timeline-desc">Students from the UAE, UK, USA, and Singapore joined ChessGum. We introduced international pricing and flexible time zones to serve families across the world.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🏆</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2024–2025</div>
+          <div class="timeline-title">1000+ Kids & Counting</div>
+          <p class="timeline-desc">We crossed 1000 students taught, 200+ tournament wins, and a 98% parent approval rating. The journey continues — and the best is yet to come!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACHES SECTION -->
+<section class="coaches-section">
+  <div class="container">
+    <div style="text-align:center;">
+      <span class="section-tag">Our Coaches</span>
+      <h2 class="section-title">Meet the People Behind Your Child's Growth 👩‍🏫</h2>
+      <p class="section-sub">All our coaches are specially trained in child psychology and chess pedagogy — they're not just chess players, they're kid whisperers.</p>
+    </div>
+    <div class="coaches-grid">
+      <div class="coach-card reveal">
+        <div class="coach-avatar ca-1">A</div>
+        <div class="coach-name">Arjun Verma</div>
+        <div class="coach-title">Head Coach · 8 Years Experience</div>
+        <p class="coach-desc">National-rated chess player with a passion for teaching. Arjun specialises in the Advanced programme and has personally coached 50+ tournament winners.</p>
+      </div>
+      <div class="coach-card reveal">
+        <div class="coach-avatar ca-2">P</div>
+        <div class="coach-name">Priya Menon</div>
+        <div class="coach-title">Beginner Specialist · 5 Years Experience</div>
+        <p class="coach-desc">Priya has a background in early childhood education and chess. She makes learning chess feel like storytime — perfect for kids aged 4 to 7.</p>
+      </div>
+      <div class="coach-card reveal">
+        <div class="coach-avatar ca-3">R</div>
+        <div class="coach-name">Rahul Singh</div>
+        <div class="coach-title">Tournament Coach · 6 Years Experience</div>
+        <p class="coach-desc">Rahul prepares students for competitive play — openings, endgames, mental preparation. His students regularly place in state and national-level events.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="about-cta">
+  <div class="container">
+    <span class="section-tag">Start Today</span>
+    <h2 class="section-title">Ready to Join the ChessGum Family? 🚀</h2>
+    <p>Book a FREE demo class — no commitment, no credit card. Just chess, fun, and a coach who genuinely cares about your child's growth.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn btn-primary">🎓 Book a Free Demo Class</a>
+      <a href="pricing.html" class="btn btn-secondary">💎 View Pricing Plans</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:0;">
+          <img src="chessgum_logo.png" alt="ChessGum Logo" class="logo-img"/>
+          <div class="logo-text">Chess<span style="color:var(--orange)">Gum</span></div>
+        </div>
+        <p>Nurturing young chess champions since 2020. We believe every child has the potential to think like a grandmaster!</p>
+        <div class="footer-socials">
+          <div class="social-btn" title="Facebook">📘</div>
+          <div class="social-btn" title="Instagram">📸</div>
+          <div class="social-btn" title="YouTube">▶️</div>
+          <div class="social-btn" title="WhatsApp">💬</div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="pricing.html">Pricing &amp; Plans</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul class="footer-links">
+          <li><a href="mailto:hello.chessgum@gmail.com">📧 hello.chessgum@gmail.com</a></li>
+          <li><a href="https://wa.me/" target="_blank">💬 WhatsApp Us</a></li>
+          <li><a href="contact.html">📋 Book a Free Trial</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 ChessGum. All rights reserved. Made with ♟️ &amp; ❤️</span>
+      <span style="font-size:0.8rem;opacity:0.5;">Privacy Policy &nbsp;|&nbsp; Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" aria-label="Scroll to top">↑</button>
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+  });
+  // Scroll to top
+  document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  // Burger menu
+  const burger = document.getElementById('burger');
+  const mobileNav = document.getElementById('mobileNav');
+  burger.addEventListener('click', () => mobileNav.classList.toggle('open'));
+  // Reveal animations
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
