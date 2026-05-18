@@ -170,36 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Send data to FormSubmit
-      const formData = new FormData(form);
-      // Adding some metadata for FormSubmit
-      formData.append('_subject', '🎓 New Demo Booking from ' + parentName);
-      formData.append('_captcha', 'false');
+      // 🔔 Send Telegram notification
+      sendTelegramNotification(parentName, childName, email, phone, childAge, source);
 
-      fetch('https://formsubmit.co/ajax/hello.chessgum@gmail.com', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        // 🔔 Fire Telegram notification (non-blocking)
-        sendTelegramNotification(parentName, childName, email, phone, childAge, source);
-
-        // Show success message
-        form.style.display = 'none';
-        successMsg.style.display = 'block';
-      })
-      .catch(error => {
-        console.error('Error submitting form:', error);
-        btn.textContent = 'Error! Try Again';
-        btn.disabled = false;
-        setTimeout(() => {
-          btn.textContent = originalBtnText;
-        }, 3000);
-      });
+      // Show success message
+      form.style.display = 'none';
+      successMsg.style.display = 'block';
     });
   }
 
