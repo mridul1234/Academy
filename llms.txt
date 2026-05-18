@@ -14,7 +14,6 @@ ChessGum is an online educational platform offering expert online chess coaching
 ## Structure & Important Pages
 - [/about](https://www.chessgum.com/about): Information about our teaching philosophy, history, and the benefits of chess for children.
 - [/pricing](https://www.chessgum.com/pricing): Details on our flexible quarterly pricing plans for India.
-- [/pricing-international](https://www.chessgum.com/pricing-international): International pricing plans.
 - [/contact](https://www.chessgum.com/contact): Contact information and enrollment form for the free demo class.
 
 ## Optional Notes
