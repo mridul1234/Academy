@@ -1,0 +1,24 @@
+# ChessGum
+
+> #1 Online Chess Academy for Kids aged 4–15
+
+ChessGum is an online educational platform offering expert online chess coaching for children. We provide live interactive sessions, customized learning paths, and maintain small batch sizes (maximum 2 students) to ensure personalized attention.
+
+## Key Offerings
+- **Free Demo Class**: A complimentary 1-hour trial class for new students.
+- **Age Group**: Specialized curriculum for kids aged 4 to 15.
+- **Batch Sizes**: Individual (1:1) and Buddy (1:2) sessions.
+- **Curriculum Levels**: Beginner, Intermediate, and Advanced.
+- **Features**: Tournament preparation, monthly progress reports, and certified expert coaches.
+
+## Structure & Important Pages
+- [/about](https://www.chessgum.com/about): Information about our teaching philosophy, history, and the benefits of chess for children.
+- [/pricing](https://www.chessgum.com/pricing): Details on our flexible quarterly pricing plans for India.
+- [/contact](https://www.chessgum.com/contact): Contact information and enrollment form for the free demo class.
+
+## Optional Notes
+- The website is optimized for SEO and incorporates Schema markup (EducationalOrganization, FAQPage, AggregateRating) to better describe the academy's offerings to search engines and AI assistants.
+
+## Technical Details
+- Official Website: https://www.chessgum.com
+- Contact Email: hello.chessgum@gmail.com
