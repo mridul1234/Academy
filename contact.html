@@ -400,9 +400,21 @@
     btn.textContent = 'Sending...';
     btn.disabled = true;
     const data = new FormData(form);
+    const parentName = data.get('parentName') || '';
+    const childName = data.get('childName') || '';
+    const email = data.get('email') || '';
+    const phone = data.get('phone') || '';
+    const childAge = data.get('childAge') || '';
+    const source = data.get('source') || 'Contact Page';
+    const message = data.get('message') || '';
     try {
       await fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: data, headers:{'Accept':'application/json'} });
     } catch(err) {}
+    fetch('http://localhost:3001/api/leads', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':'dev-leads-key'},
+      body:JSON.stringify({ parentName, childName, email, phone, childAge, source, message })
+    }).catch(() => {});
     form.style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
     if (window.gtag) gtag('event','contact_form_submit',{event_category:'Lead',event_label:'Contact Page'});

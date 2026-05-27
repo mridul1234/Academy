@@ -1,0 +1,123 @@
+{
+  "leads": [
+    {
+      "id": "lead_seed_1",
+      "created_at": "2026-05-20T09:30:00.000Z",
+      "parent_name": "Reena Sharma",
+      "child_name": "Ayaan",
+      "email": "reena@example.com",
+      "phone": "9876543210",
+      "child_age": 7,
+      "source": "facebook",
+      "message": "Looking for a beginner class.",
+      "interested_plan": "buddy_beginner",
+      "status": "enrolled",
+      "is_paid": true,
+      "payment_amount": 3500,
+      "payment_date": "2026-05-22",
+      "enrolled_at": "2026-05-22T10:30:00.000Z",
+      "lost_reason": null,
+      "last_contacted_at": "2026-05-21T08:30:00.000Z",
+      "archived": false
+    },
+    {
+      "id": "lead_seed_2",
+      "created_at": "2026-05-25T12:15:00.000Z",
+      "parent_name": "Amit Desai",
+      "child_name": "Rohan",
+      "email": "amit@example.com",
+      "phone": "9988776655",
+      "child_age": 10,
+      "source": "website",
+      "message": "Intermediate level demo please.",
+      "interested_plan": "individual_intermediate",
+      "status": "demo_scheduled",
+      "is_paid": false,
+      "payment_amount": null,
+      "payment_date": null,
+      "enrolled_at": null,
+      "lost_reason": null,
+      "last_contacted_at": "2026-05-26T08:00:00.000Z",
+      "archived": false
+    },
+    {
+      "id": "lead_seed_3",
+      "created_at": "2026-05-13T10:00:00.000Z",
+      "parent_name": "Sneha Patel",
+      "child_name": "Diya",
+      "email": "sneha@example.com",
+      "phone": "9123456780",
+      "child_age": 9,
+      "source": "instagram",
+      "message": "Wants tournament preparation.",
+      "interested_plan": "individual_advanced",
+      "status": "lost",
+      "is_paid": false,
+      "payment_amount": null,
+      "payment_date": null,
+      "enrolled_at": null,
+      "lost_reason": "Timing mismatch",
+      "last_contacted_at": "2026-05-17T07:00:00.000Z",
+      "archived": false
+    }
+  ],
+  "lead_notes": [
+    {
+      "id": "note_seed_1",
+      "lead_id": "lead_seed_1",
+      "content": "Loved the demo and enrolled for Buddy Beginner.",
+      "created_at": "2026-05-22T10:35:00.000Z"
+    },
+    {
+      "id": "note_seed_2",
+      "lead_id": "lead_seed_2",
+      "content": "Demo scheduled for Saturday evening.",
+      "created_at": "2026-05-26T08:10:00.000Z"
+    }
+  ],
+  "revenue_entries": [
+    {
+      "id": "rev_seed_1",
+      "created_at": "2026-05-22T10:35:00.000Z",
+      "transaction_date": "2026-05-22",
+      "amount": 3500,
+      "student_name": "Ayaan Sharma",
+      "plan_type": "buddy_beginner",
+      "payment_method": "razorpay",
+      "razorpay_payment_id": "pay_seed_1",
+      "description": "Buddy Beginner enrollment",
+      "lead_id": "lead_seed_1"
+    }
+  ],
+  "students": [
+    {
+      "id": "student_seed_1",
+      "lead_id": "lead_seed_1",
+      "child_name": "Ayaan",
+      "parent_name": "Reena Sharma",
+      "email": "reena@example.com",
+      "phone": "9876543210",
+      "plan_type": "buddy",
+      "level": "beginner",
+      "enrolled_date": "2026-05-22",
+      "renewal_date": "2026-08-22",
+      "is_active": true,
+      "sessions_total": 24,
+      "sessions_done": 3,
+      "notes": "Energetic beginner.",
+      "created_at": "2026-05-22T10:40:00.000Z"
+    }
+  ],
+  "site_metrics": [
+    {
+      "key": "kids_taught",
+      "value": "1000+",
+      "updated_at": "2026-05-22T10:40:00.000Z"
+    },
+    {
+      "key": "tournament_wins",
+      "value": "200+",
+      "updated_at": "2026-05-22T10:40:00.000Z"
+    }
+  ]
+}

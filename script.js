@@ -2,6 +2,26 @@
    CHESS KIDS ACADEMY — SCRIPT
    ============================================= */
 
+const SUPABASE_URL = 'https://your-project-id.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const CHESSGUM_ADMIN_API_URL = 'http://localhost:3001';
+const CHESSGUM_LEADS_API_KEY = 'dev-leads-key';
+let supabase = null;
+if (window.supabase) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+function sendLeadToAdmin(parentName, childName, email, phone, childAge, source, message = '') {
+  fetch(`${CHESSGUM_ADMIN_API_URL}/api/leads`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': CHESSGUM_LEADS_API_KEY
+    },
+    body: JSON.stringify({ parentName, childName, email, phone, childAge, source, message })
+  }).catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- Navbar scroll effect ---- */
@@ -172,6 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 🔔 Send Telegram notification
       sendTelegramNotification(parentName, childName, email, phone, childAge, source);
+      sendLeadToAdmin(parentName, childName, email, phone, childAge, source);
+
+      // ☁️ Insert to Supabase Database
+      if (supabase) {
+        supabase.from('leads').insert([{
+          parent_name: parentName,
+          child_name: childName,
+          email: email,
+          phone: phone,
+          age: parseInt(childAge) || 0,
+          source: source === 'Facebook' || source === 'Instagram' ? 'facebook_ad' : 'website_form',
+          stage: 'demo_form_filled',
+          value: 3500, // Default estimated value
+          added_at: Date.now()
+        }]).then(({ error }) => {
+          if (error) console.error('Supabase Error:', error);
+        });
+      }
 
       // Show success message
       form.style.display = 'none';
