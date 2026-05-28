@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const publicLeadRequest =
+    pathname.startsWith('/api/leads') && ['POST', 'OPTIONS'].includes(req.method);
   const publicPath =
-    pathname.startsWith('/api/leads') && req.method === 'POST' ||
+    publicLeadRequest ||
     pathname.startsWith('/api/auth') ||
     pathname === '/login' ||
     pathname === '/chessgum_logo.png' ||
