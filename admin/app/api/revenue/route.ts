@@ -10,8 +10,12 @@ export async function GET() {
 
 export async function POST(req: Request) {
   if (!(await isAuthed())) return unauthorized();
-  const entry = await createRevenueEntry(await req.json());
-  return NextResponse.json({ entry }, { status: 201 });
+  try {
+    const entry = await createRevenueEntry(await req.json());
+    return NextResponse.json({ entry }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Revenue entry failed' }, { status: 500 });
+  }
 }
 
 export async function DELETE(req: Request) {

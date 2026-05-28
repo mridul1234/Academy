@@ -37,7 +37,7 @@ export type RevenueEntry = {
   amount: number;
   student_name?: string | null;
   plan_type?: string | null;
-  payment_method: 'razorpay' | 'cash' | 'bank_transfer' | 'manual';
+  payment_method: 'razorpay' | 'upi' | 'cash' | 'bank_transfer' | 'manual';
   razorpay_payment_id?: string | null;
   description?: string | null;
   lead_id?: string | null;

@@ -61,7 +61,7 @@ export function StudentsWorkspace({
   const enriched = useMemo<EnrichedStudent[]>(() => {
     return students.map((student) => {
       const paid = revenueEntries
-        .filter((entry) => entry.lead_id === student.id)
+        .filter((entry) => (entry.description || '').includes(`[student:${student.id}]`))
         .reduce((sum, entry) => sum + Number(entry.amount), 0);
       const renewal = student.renewal_date ? new Date(student.renewal_date) : null;
       const today = new Date();
@@ -126,11 +126,16 @@ export function StudentsWorkspace({
           amount,
           transaction_date: payload.enrolled_date || new Date().toISOString().slice(0, 10),
           payment_method: 'manual',
-          description: 'Opening payment from student roster',
-          lead_id: studentData.student.id,
+          description: `Opening payment from student roster [student:${studentData.student.id}]`,
         }),
-      }).then((res) => res.json()).then((data) => {
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Payment save failed');
+        return data;
+      }).then((data) => {
         if (data.entry) setRevenueEntries((items) => [data.entry, ...items]);
+      }).catch((error) => {
+        alert(`Student was saved, but payment was not added: ${error.message}`);
       });
     }
 
@@ -154,7 +159,7 @@ export function StudentsWorkspace({
     if (!confirm('Delete this student from the roster? Opening payment created from this student card will also be removed. Razorpay/manual revenue stays untouched.')) return;
     await fetch(`/api/students?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     setStudents((items) => items.filter((student) => student.id !== id));
-    setRevenueEntries((items) => items.filter((entry) => !(entry.lead_id === id && entry.description === 'Opening payment from student roster')));
+    setRevenueEntries((items) => items.filter((entry) => !(entry.description || '').includes(`[student:${id}]`)));
     if (editing?.id === id) setEditing(null);
   }
 

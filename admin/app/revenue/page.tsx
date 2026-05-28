@@ -8,7 +8,7 @@ export default async function RevenuePage() {
   const data = await getDashboardData();
   return (
     <DashboardShell title="Revenue" subtitle="Manual revenue, Razorpay imports, and plan performance">
-      <RevenueCenter initialRevenue={data.revenue_entries} />
+      <RevenueCenter initialRevenue={data.revenue_entries} students={data.students} />
     </DashboardShell>
   );
 }

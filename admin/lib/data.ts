@@ -148,7 +148,7 @@ export async function deleteRevenueEntry(id: string) {
 export async function cleanupRosterRevenueDuplicates() {
   const data = await getDashboardData();
   const rosterEntries = data.revenue_entries
-    .filter((entry) => entry.description === 'Opening payment from student roster')
+    .filter((entry) => (entry.description || '').includes('student roster'))
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   const activeStudentIds = new Set(data.students.map((student) => student.id));
@@ -156,10 +156,11 @@ export async function cleanupRosterRevenueDuplicates() {
   const deleteIds: string[] = [];
 
   for (const entry of rosterEntries) {
-    const key = entry.lead_id && activeStudentIds.has(entry.lead_id)
-      ? `student:${entry.lead_id}`
+    const marker = getStudentMarker(entry.description);
+    const key = marker && activeStudentIds.has(marker)
+      ? `student:${marker}`
       : `orphan:${(entry.student_name || '').toLowerCase()}|${entry.amount}|${entry.transaction_date}`;
-    if (seen.has(key) || !entry.lead_id || !activeStudentIds.has(entry.lead_id)) {
+    if (seen.has(key) || !marker || !activeStudentIds.has(marker)) {
       deleteIds.push(entry.id);
     } else {
       seen.add(key);
@@ -241,8 +242,7 @@ export async function deleteStudent(id: string) {
     const { error: revenueError } = await supabase
       .from('revenue_entries')
       .delete()
-      .eq('lead_id', id)
-      .eq('description', 'Opening payment from student roster');
+      .ilike('description', `%[student:${id}]%`);
     if (revenueError) throw revenueError;
 
     const { error } = await supabase.from('students').delete().eq('id', id);
@@ -252,10 +252,15 @@ export async function deleteStudent(id: string) {
 
   const data = await readLocal();
   data.revenue_entries = data.revenue_entries.filter(
-    (entry) => !(entry.lead_id === id && entry.description === 'Opening payment from student roster'),
+    (entry) => !(entry.description || '').includes(`[student:${id}]`),
   );
   data.students = data.students.filter((student) => student.id !== id);
   await writeLocal(data);
+}
+
+function getStudentMarker(description?: string | null) {
+  const match = String(description || '').match(/\[student:([^\]]+)\]/);
+  return match?.[1] || null;
 }
 
 export async function updateSettings(metrics: Record<string, string>) {
