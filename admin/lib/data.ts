@@ -145,6 +145,42 @@ export async function deleteRevenueEntry(id: string) {
   await writeLocal(data);
 }
 
+export async function cleanupRosterRevenueDuplicates() {
+  const data = await getDashboardData();
+  const rosterEntries = data.revenue_entries
+    .filter((entry) => entry.description === 'Opening payment from student roster')
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+  const activeStudentIds = new Set(data.students.map((student) => student.id));
+  const seen = new Set<string>();
+  const deleteIds: string[] = [];
+
+  for (const entry of rosterEntries) {
+    const key = entry.lead_id && activeStudentIds.has(entry.lead_id)
+      ? `student:${entry.lead_id}`
+      : `orphan:${(entry.student_name || '').toLowerCase()}|${entry.amount}|${entry.transaction_date}`;
+    if (seen.has(key) || !entry.lead_id || !activeStudentIds.has(entry.lead_id)) {
+      deleteIds.push(entry.id);
+    } else {
+      seen.add(key);
+    }
+  }
+
+  if (!deleteIds.length) return { deleted: 0 };
+
+  const supabase = getSupabase();
+  if (supabase) {
+    const { error } = await supabase.from('revenue_entries').delete().in('id', deleteIds);
+    if (error) throw error;
+    return { deleted: deleteIds.length };
+  }
+
+  const local = await readLocal();
+  local.revenue_entries = local.revenue_entries.filter((entry) => !deleteIds.includes(entry.id));
+  await writeLocal(local);
+  return { deleted: deleteIds.length };
+}
+
 export async function createStudent(input: Partial<Student>) {
   const student: Student = {
     id: uid('student'),
@@ -202,12 +238,22 @@ export async function updateStudent(id: string, updates: Partial<Student>) {
 export async function deleteStudent(id: string) {
   const supabase = getSupabase();
   if (supabase) {
+    const { error: revenueError } = await supabase
+      .from('revenue_entries')
+      .delete()
+      .eq('lead_id', id)
+      .eq('description', 'Opening payment from student roster');
+    if (revenueError) throw revenueError;
+
     const { error } = await supabase.from('students').delete().eq('id', id);
     if (error) throw error;
     return;
   }
 
   const data = await readLocal();
+  data.revenue_entries = data.revenue_entries.filter(
+    (entry) => !(entry.lead_id === id && entry.description === 'Opening payment from student roster'),
+  );
   data.students = data.students.filter((student) => student.id !== id);
   await writeLocal(data);
 }

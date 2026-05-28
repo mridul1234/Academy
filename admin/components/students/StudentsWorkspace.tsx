@@ -52,6 +52,7 @@ export function StudentsWorkspace({
   revenue: RevenueEntry[];
 }) {
   const [students, setStudents] = useState(initialStudents);
+  const [revenueEntries, setRevenueEntries] = useState(revenue);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
   const [saving, setSaving] = useState(false);
@@ -59,11 +60,8 @@ export function StudentsWorkspace({
 
   const enriched = useMemo<EnrichedStudent[]>(() => {
     return students.map((student) => {
-      const paid = revenue
-        .filter((entry) => {
-          const haystack = `${entry.student_name || ''} ${entry.description || ''}`.toLowerCase();
-          return haystack.includes(student.child_name.toLowerCase()) || haystack.includes(student.parent_name.toLowerCase());
-        })
+      const paid = revenueEntries
+        .filter((entry) => entry.lead_id === student.id)
         .reduce((sum, entry) => sum + Number(entry.amount), 0);
       const renewal = student.renewal_date ? new Date(student.renewal_date) : null;
       const today = new Date();
@@ -73,7 +71,7 @@ export function StudentsWorkspace({
       const computedStatus = !student.is_active ? 'paused' : daysToRenewal !== null && daysToRenewal < -14 ? 'churned' : 'active';
       return { ...student, paid, daysToRenewal, progress, remaining, computedStatus };
     });
-  }, [students, revenue]);
+  }, [students, revenueEntries]);
 
   const filtered = enriched.filter((student) => {
     const q = query.toLowerCase();
@@ -129,7 +127,10 @@ export function StudentsWorkspace({
           transaction_date: payload.enrolled_date || new Date().toISOString().slice(0, 10),
           payment_method: 'manual',
           description: 'Opening payment from student roster',
+          lead_id: studentData.student.id,
         }),
+      }).then((res) => res.json()).then((data) => {
+        if (data.entry) setRevenueEntries((items) => [data.entry, ...items]);
       });
     }
 
@@ -150,10 +151,19 @@ export function StudentsWorkspace({
   }
 
   async function removeStudent(id: string) {
-    if (!confirm('Delete this student from the roster? Revenue entries will stay untouched.')) return;
+    if (!confirm('Delete this student from the roster? Opening payment created from this student card will also be removed. Razorpay/manual revenue stays untouched.')) return;
     await fetch(`/api/students?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     setStudents((items) => items.filter((student) => student.id !== id));
+    setRevenueEntries((items) => items.filter((entry) => !(entry.lead_id === id && entry.description === 'Opening payment from student roster')));
     if (editing?.id === id) setEditing(null);
+  }
+
+  async function cleanupDuplicates() {
+    const res = await fetch('/api/revenue', { method: 'PATCH' });
+    const result = await res.json();
+    const refreshed = await fetch('/api/revenue').then((r) => r.json());
+    setRevenueEntries(refreshed.revenue || []);
+    alert(`Cleaned ${result.deleted || 0} duplicate/orphan roster payment entries.`);
   }
 
   async function saveEdit(event: React.FormEvent<HTMLFormElement>) {
@@ -234,6 +244,9 @@ export function StudentsWorkspace({
             <h3 className="text-lg font-black">Add Student</h3>
             <p className="text-sm font-semibold text-slate-500">Backfill existing students or add a newly enrolled child</p>
           </div>
+          <button className="btn ml-auto" type="button" onClick={cleanupDuplicates}>
+            Clean duplicate payments
+          </button>
         </div>
         <form className="grid gap-3 lg:grid-cols-6" onSubmit={addStudent}>
           <input className="input lg:col-span-2" name="child_name" placeholder="Child name" required />

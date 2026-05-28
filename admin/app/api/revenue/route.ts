@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createRevenueEntry, deleteRevenueEntry, getDashboardData } from '@/lib/data';
+import { cleanupRosterRevenueDuplicates, createRevenueEntry, deleteRevenueEntry, getDashboardData } from '@/lib/data';
 import { isAuthed, unauthorized } from '@/lib/auth';
 
 export async function GET() {
@@ -19,4 +19,10 @@ export async function DELETE(req: Request) {
   const { searchParams } = new URL(req.url);
   await deleteRevenueEntry(String(searchParams.get('id') || ''));
   return NextResponse.json({ ok: true });
+}
+
+export async function PATCH() {
+  if (!(await isAuthed())) return unauthorized();
+  const result = await cleanupRosterRevenueDuplicates();
+  return NextResponse.json(result);
 }
