@@ -412,7 +412,7 @@
     } catch(err) {}
     fetch('https://admin.chessgum.com/api/leads', {
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':'dev-leads-key'},
+      headers:{'Content-Type':'application/json','x-api-key':'leads_sk_9f7b2c8a1e4d6f0a3b5c9e2d7a8f1c6b4e0d9a2f5c7b8e1a3d6f9c0b2e4a7d'},
       body:JSON.stringify({ parentName, childName, email, phone, childAge, source, message })
     }).catch(() => {});
     form.style.display = 'none';

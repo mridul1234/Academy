@@ -5,7 +5,7 @@
 const SUPABASE_URL = 'https://your-project-id.supabase.co';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 const CHESSGUM_ADMIN_API_URL = 'https://admin.chessgum.com';
-const CHESSGUM_LEADS_API_KEY = 'dev-leads-key';
+const CHESSGUM_LEADS_API_KEY = 'leads_sk_9f7b2c8a1e4d6f0a3b5c9e2d7a8f1c6b4e0d9a2f5c7b8e1a3d6f9c0b2e4a7d';
 let supabase = null;
 if (window.supabase) {
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
