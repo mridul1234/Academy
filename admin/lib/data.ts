@@ -199,6 +199,19 @@ export async function updateStudent(id: string, updates: Partial<Student>) {
   return data.students[idx];
 }
 
+export async function deleteStudent(id: string) {
+  const supabase = getSupabase();
+  if (supabase) {
+    const { error } = await supabase.from('students').delete().eq('id', id);
+    if (error) throw error;
+    return;
+  }
+
+  const data = await readLocal();
+  data.students = data.students.filter((student) => student.id !== id);
+  await writeLocal(data);
+}
+
 export async function updateSettings(metrics: Record<string, string>) {
   const data = await readLocal();
   data.site_metrics = Object.entries(metrics).map(([key, value]) => ({

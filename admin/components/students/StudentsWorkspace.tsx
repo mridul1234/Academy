@@ -15,6 +15,7 @@ import {
   Phone,
   Plus,
   Search,
+  Trash2,
   Trophy,
   UserPlus,
   WalletCards,
@@ -54,6 +55,7 @@ export function StudentsWorkspace({
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState<Student | null>(null);
 
   const enriched = useMemo<EnrichedStudent[]>(() => {
     return students.map((student) => {
@@ -97,11 +99,19 @@ export function StudentsWorkspace({
     setSaving(true);
     const form = new FormData(event.currentTarget);
     const payload = Object.fromEntries(form);
+    const structuredNotes = [
+      payload.batch_time ? `Batch: ${payload.batch_time}` : '',
+      payload.student_goal ? `Goal: ${payload.student_goal}` : '',
+      payload.current_focus ? `Current focus: ${payload.current_focus}` : '',
+      payload.homework ? `Homework: ${payload.homework}` : '',
+      payload.notes ? `Notes: ${payload.notes}` : '',
+    ].filter(Boolean).join('\n');
     const studentRes = await fetch('/api/students', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...payload,
+        notes: structuredNotes,
         is_active: payload.status !== 'paused',
       }),
     });
@@ -136,6 +146,36 @@ export function StudentsWorkspace({
     });
     const data = await res.json();
     setStudents((items) => items.map((student) => (student.id === id ? data.student : student)));
+    if (editing?.id === id) setEditing(data.student);
+  }
+
+  async function removeStudent(id: string) {
+    if (!confirm('Delete this student from the roster? Revenue entries will stay untouched.')) return;
+    await fetch(`/api/students?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    setStudents((items) => items.filter((student) => student.id !== id));
+    if (editing?.id === id) setEditing(null);
+  }
+
+  async function saveEdit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editing) return;
+    const form = new FormData(event.currentTarget);
+    const payload = Object.fromEntries(form);
+    await patchStudent(editing.id, {
+      child_name: String(payload.child_name || ''),
+      parent_name: String(payload.parent_name || ''),
+      phone: String(payload.phone || ''),
+      email: String(payload.email || ''),
+      plan_type: String(payload.plan_type || ''),
+      level: String(payload.level || ''),
+      enrolled_date: String(payload.enrolled_date || ''),
+      renewal_date: String(payload.renewal_date || ''),
+      sessions_done: Number(payload.sessions_done || 0),
+      sessions_total: Number(payload.sessions_total || 24),
+      is_active: payload.status !== 'paused',
+      notes: String(payload.notes || ''),
+    });
+    setEditing(null);
   }
 
   return (
@@ -208,7 +248,11 @@ export function StudentsWorkspace({
           <input className="input" name="sessions_total" type="number" min="1" placeholder="Total" defaultValue="24" />
           <input className="input" name="opening_payment" type="number" min="0" placeholder="Payment received" />
           <select className="select" name="status"><option value="active">Active</option><option value="paused">Paused</option></select>
-          <textarea className="textarea lg:col-span-5" name="notes" placeholder="Batch time, coach notes, parent preferences, renewal context..." />
+          <input className="input lg:col-span-2" name="batch_time" placeholder="Batch/time e.g. Tue Thu 6 PM" />
+          <input className="input lg:col-span-2" name="student_goal" placeholder="Goal e.g. basics, tournament prep" />
+          <input className="input lg:col-span-2" name="current_focus" placeholder="Current focus e.g. tactics, openings" />
+          <input className="input lg:col-span-3" name="homework" placeholder="Homework / next practice" />
+          <textarea className="textarea lg:col-span-2" name="notes" placeholder="Parent preferences, coach notes, renewal context..." />
           <button className="btn btn-primary lg:col-span-1" disabled={saving}>
             <Plus size={16} /> {saving ? 'Saving' : 'Save'}
           </button>
@@ -234,7 +278,7 @@ export function StudentsWorkspace({
 
         <div className="grid gap-4 p-4 xl:grid-cols-2">
           {filtered.map((student) => (
-            <StudentCard key={student.id} student={student} onPatch={patchStudent} />
+            <StudentCard key={student.id} student={student} onPatch={patchStudent} onEdit={setEditing} onDelete={removeStudent} />
           ))}
           {filtered.length === 0 ? (
             <div className="col-span-full rounded-lg border border-dashed border-slate-300 p-8 text-center">
@@ -244,6 +288,14 @@ export function StudentsWorkspace({
           ) : null}
         </div>
       </section>
+
+      {editing ? (
+        <EditStudentModal
+          student={editing}
+          onClose={() => setEditing(null)}
+          onSave={saveEdit}
+        />
+      ) : null}
     </div>
   );
 }
@@ -310,9 +362,13 @@ function AttentionItem({ student }: { student: EnrichedStudent }) {
 function StudentCard({
   student,
   onPatch,
+  onEdit,
+  onDelete,
 }: {
   student: EnrichedStudent;
   onPatch: (id: string, updates: Partial<Student>) => void;
+  onEdit: (student: Student) => void;
+  onDelete: (id: string) => void;
 }) {
   const initials = `${student.child_name?.[0] || 'S'}${student.parent_name?.[0] || 'P'}`.toUpperCase();
   const waText = encodeURIComponent(`Hi ${student.parent_name}, this is from ChessGum. Quick update about ${student.child_name}'s classes.`);
@@ -330,6 +386,17 @@ function StudentCard({
       : student.daysToRenewal < 0
         ? `${Math.abs(student.daysToRenewal)}d overdue`
         : `${student.daysToRenewal}d to renewal`;
+  const todayLine = `Session logged ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+
+  function addMonths(months: number) {
+    const base = student.renewal_date ? new Date(student.renewal_date) : new Date();
+    base.setMonth(base.getMonth() + months);
+    return base.toISOString().slice(0, 10);
+  }
+
+  function appendNote(line: string) {
+    return [student.notes || '', line].filter(Boolean).join('\n');
+  }
 
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -341,9 +408,15 @@ function StudentCard({
             <div className="text-sm font-semibold text-slate-500">{student.parent_name}</div>
           </div>
         </div>
-        <span className={student.computedStatus === 'active' ? 'badge bg-emerald-50 text-emerald-700' : student.computedStatus === 'churned' ? 'badge bg-red-50 text-red-700' : 'badge bg-slate-100 text-slate-600'}>
-          {student.computedStatus}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={student.computedStatus === 'active' ? 'badge bg-emerald-50 text-emerald-700' : student.computedStatus === 'churned' ? 'badge bg-red-50 text-red-700' : 'badge bg-slate-100 text-slate-600'}>
+            {student.computedStatus}
+          </span>
+          <button className="btn" onClick={() => onEdit(student)}>Edit</button>
+          <button className="btn btn-danger" onClick={() => onDelete(student.id)} aria-label={`Delete ${student.child_name}`}>
+            <Trash2 size={15} />
+          </button>
+        </div>
       </div>
 
       <div className="mb-4 grid gap-3 md:grid-cols-3">
@@ -380,9 +453,18 @@ function StudentCard({
           </button>
           <button
             className="btn btn-primary"
-            onClick={() => onPatch(student.id, { sessions_done: Math.min(Number(student.sessions_total || 0), Number(student.sessions_done || 0) + 1) })}
+            onClick={() => onPatch(student.id, {
+              sessions_done: Math.min(Number(student.sessions_total || 0), Number(student.sessions_done || 0) + 1),
+              notes: appendNote(todayLine),
+            })}
           >
             +1 Session
+          </button>
+          <button className="btn" onClick={() => onPatch(student.id, { renewal_date: addMonths(1), is_active: true })}>
+            Renew 1m
+          </button>
+          <button className="btn" onClick={() => onPatch(student.id, { renewal_date: addMonths(3), is_active: true })}>
+            Renew 3m
           </button>
           <button className="btn" onClick={() => onPatch(student.id, { is_active: !student.is_active })}>
             {student.is_active ? 'Pause' : 'Activate'}
@@ -390,6 +472,51 @@ function StudentCard({
         </div>
       </div>
     </article>
+  );
+}
+
+function EditStudentModal({
+  student,
+  onClose,
+  onSave,
+}: {
+  student: Student;
+  onClose: () => void;
+  onSave: (event: React.FormEvent<HTMLFormElement>) => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4" onClick={onClose}>
+      <form className="card max-h-[92vh] w-full max-w-4xl overflow-auto p-5" onSubmit={onSave} onClick={(event) => event.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-black">Edit Student</h3>
+            <p className="text-sm font-semibold text-slate-500">Update roster, renewal, sessions, contact, and coach notes.</p>
+          </div>
+          <button className="btn" type="button" onClick={onClose}>Close</button>
+        </div>
+        <div className="grid gap-3 lg:grid-cols-6">
+          <input className="input lg:col-span-2" name="child_name" defaultValue={student.child_name} placeholder="Child name" required />
+          <input className="input lg:col-span-2" name="parent_name" defaultValue={student.parent_name} placeholder="Parent name" required />
+          <input className="input lg:col-span-2" name="phone" defaultValue={student.phone || ''} placeholder="Phone" />
+          <input className="input lg:col-span-2" name="email" defaultValue={student.email || ''} placeholder="Email" />
+          <select className="select" name="plan_type" defaultValue={student.plan_type || 'buddy'}>{planOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select>
+          <select className="select" name="level" defaultValue={student.level || 'beginner'}>{levelOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select>
+          <input className="input" name="enrolled_date" type="date" defaultValue={student.enrolled_date || ''} />
+          <input className="input" name="renewal_date" type="date" defaultValue={student.renewal_date || ''} />
+          <input className="input" name="sessions_done" type="number" min="0" defaultValue={student.sessions_done} />
+          <input className="input" name="sessions_total" type="number" min="1" defaultValue={student.sessions_total} />
+          <select className="select" name="status" defaultValue={student.is_active ? 'active' : 'paused'}>
+            <option value="active">Active</option>
+            <option value="paused">Paused</option>
+          </select>
+          <textarea className="textarea lg:col-span-6" name="notes" rows={8} defaultValue={student.notes || ''} placeholder="Batch, goal, current focus, homework, parent preferences, session log..." />
+        </div>
+        <div className="mt-4 flex justify-end gap-2">
+          <button className="btn" type="button" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
   );
 }
 

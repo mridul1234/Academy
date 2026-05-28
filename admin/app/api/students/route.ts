@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createStudent, getDashboardData, updateStudent } from '@/lib/data';
+import { createStudent, deleteStudent, getDashboardData, updateStudent } from '@/lib/data';
 import { isAuthed, unauthorized } from '@/lib/auth';
 
 export async function GET() {
@@ -20,4 +20,11 @@ export async function PATCH(req: Request) {
   const { id, ...updates } = body;
   const student = await updateStudent(String(id), updates);
   return NextResponse.json({ student });
+}
+
+export async function DELETE(req: Request) {
+  if (!(await isAuthed())) return unauthorized();
+  const { searchParams } = new URL(req.url);
+  await deleteStudent(String(searchParams.get('id') || ''));
+  return NextResponse.json({ ok: true });
 }
