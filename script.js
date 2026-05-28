@@ -4,7 +4,7 @@
 
 const SUPABASE_URL = 'https://your-project-id.supabase.co';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-const CHESSGUM_ADMIN_API_URL = 'http://localhost:3001';
+const CHESSGUM_ADMIN_API_URL = 'https://admin.chessgum.com';
 const CHESSGUM_LEADS_API_KEY = 'dev-leads-key';
 let supabase = null;
 if (window.supabase) {

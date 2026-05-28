@@ -410,7 +410,7 @@
     try {
       await fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: data, headers:{'Accept':'application/json'} });
     } catch(err) {}
-    fetch('http://localhost:3001/api/leads', {
+    fetch('https://admin.chessgum.com/api/leads', {
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':'dev-leads-key'},
       body:JSON.stringify({ parentName, childName, email, phone, childAge, source, message })
