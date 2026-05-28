@@ -1,10 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { getSupabase } from './supabase';
-import type { DashboardData, Lead, LeadNote, RevenueEntry, Student } from './types';
+import type { DashboardData, Lead, LeadNote, RevenueEntry, ScheduleEntry, Student } from './types';
 import { normalizeSource, planAmount, uid } from './utils';
 
 const localPath = path.join(process.cwd(), 'lib', 'local-data.json');
+const SCHEDULE_KEY = 'class_schedule';
 
 async function readLocal(): Promise<DashboardData> {
   const text = await fs.readFile(localPath, 'utf8');
@@ -272,4 +273,37 @@ export async function updateSettings(metrics: Record<string, string>) {
   }));
   await writeLocal(data);
   return data.site_metrics;
+}
+
+export function parseSchedule(metrics: { key: string; value: string | null }[]) {
+  const raw = metrics.find((metric) => metric.key === SCHEDULE_KEY)?.value;
+  if (!raw) return [] as ScheduleEntry[];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed as ScheduleEntry[] : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function saveSchedule(entries: ScheduleEntry[]) {
+  const value = JSON.stringify(entries);
+  const supabase = getSupabase();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('site_metrics')
+      .upsert({ key: SCHEDULE_KEY, value, updated_at: new Date().toISOString() })
+      .select('*')
+      .single();
+    if (error) throw error;
+    return parseSchedule([data]);
+  }
+
+  const data = await readLocal();
+  const idx = data.site_metrics.findIndex((metric) => metric.key === SCHEDULE_KEY);
+  const metric = { key: SCHEDULE_KEY, value, updated_at: new Date().toISOString() };
+  if (idx > -1) data.site_metrics[idx] = metric;
+  else data.site_metrics.push(metric);
+  await writeLocal(data);
+  return entries;
 }

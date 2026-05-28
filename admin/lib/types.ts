@@ -67,6 +67,16 @@ export type SiteMetric = {
   updated_at: string;
 };
 
+export type ScheduleEntry = {
+  id: string;
+  student_id: string;
+  day: number;
+  start_hour: number;
+  duration_hours: number;
+  title?: string;
+  note?: string;
+};
+
 export type DashboardData = {
   leads: Lead[];
   lead_notes: LeadNote[];

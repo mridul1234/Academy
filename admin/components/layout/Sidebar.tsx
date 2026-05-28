@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { BarChart3, CreditCard, GraduationCap, LayoutDashboard, Settings, UsersRound } from 'lucide-react';
+import { BarChart3, CalendarDays, CreditCard, GraduationCap, LayoutDashboard, Settings, UsersRound } from 'lucide-react';
 
 const nav = [
   { href: '/', label: 'Overview', icon: LayoutDashboard },
   { href: '/leads', label: 'Leads', icon: UsersRound },
   { href: '/revenue', label: 'Revenue', icon: CreditCard },
   { href: '/students', label: 'Students', icon: GraduationCap },
+  { href: '/schedule', label: 'Schedule', icon: CalendarDays },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
