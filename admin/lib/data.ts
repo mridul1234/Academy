@@ -177,6 +177,28 @@ export async function createStudent(input: Partial<Student>) {
   return student;
 }
 
+export async function updateStudent(id: string, updates: Partial<Student>) {
+  const normalized: Partial<Student> = {
+    ...updates,
+  };
+  if (updates.sessions_total !== undefined) normalized.sessions_total = Number(updates.sessions_total);
+  if (updates.sessions_done !== undefined) normalized.sessions_done = Number(updates.sessions_done);
+
+  const supabase = getSupabase();
+  if (supabase) {
+    const { data, error } = await supabase.from('students').update(normalized).eq('id', id).select('*').single();
+    if (error) throw error;
+    return data as Student;
+  }
+
+  const data = await readLocal();
+  const idx = data.students.findIndex((student) => student.id === id);
+  if (idx === -1) throw new Error('Student not found');
+  data.students[idx] = { ...data.students[idx], ...normalized };
+  await writeLocal(data);
+  return data.students[idx];
+}
+
 export async function updateSettings(metrics: Record<string, string>) {
   const data = await readLocal();
   data.site_metrics = Object.entries(metrics).map(([key, value]) => ({

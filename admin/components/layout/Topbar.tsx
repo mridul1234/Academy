@@ -1,7 +1,17 @@
 import { Plus, Zap } from 'lucide-react';
 import Link from 'next/link';
 
-export function Topbar({ title, subtitle }: { title: string; subtitle: string }) {
+export function Topbar({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle: string;
+  action?: { label: string; href?: string; targetId?: string };
+}) {
+  const topbarAction = action || { label: 'Add Lead', href: '/leads?new=1' };
+
   return (
     <header className="topbar">
       <div>
@@ -12,9 +22,15 @@ export function Topbar({ title, subtitle }: { title: string; subtitle: string })
         <div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-extrabold text-emerald-700 sm:flex">
           <Zap size={14} /> Live
         </div>
-        <Link href="/leads?new=1" className="btn btn-primary">
-          <Plus size={16} /> Add Lead
-        </Link>
+        {topbarAction.href ? (
+          <Link href={topbarAction.href} className="btn btn-primary">
+            <Plus size={16} /> {topbarAction.label}
+          </Link>
+        ) : (
+          <a href={topbarAction.targetId || '#'} className="btn btn-primary">
+            <Plus size={16} /> {topbarAction.label}
+          </a>
+        )}
       </div>
     </header>
   );
