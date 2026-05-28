@@ -394,6 +394,30 @@
 
   // Form submit
   const form = document.getElementById('enrollForm');
+  const TELEGRAM_BOT_TOKEN = '8593407632:AAG2GPLGw2nALnP_lNSdBp-lI34BBSck4XU';
+  const TELEGRAM_CHAT_ID = '8147525276';
+
+  function sendTelegramNotification(parentName, childName, email, phone, childAge, source, message) {
+    const text =
+      `🎓 *New Demo Booking — ChessGum!*\n\n` +
+      `👨‍👩‍👦 *Parent:* ${parentName}\n` +
+      `👦 *Child:* ${childName} (Age ${childAge})\n` +
+      `📧 *Email:* ${email}\n` +
+      `📱 *Phone:* ${phone}\n` +
+      `📣 *Source:* ${source}` +
+      (message ? `\n📝 *Message:* ${message}` : '');
+
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text,
+        parse_mode: 'Markdown'
+      })
+    }).catch(err => console.warn('Telegram notification failed:', err));
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
@@ -407,6 +431,7 @@
     const childAge = data.get('childAge') || '';
     const source = data.get('source') || 'Contact Page';
     const message = data.get('message') || '';
+    sendTelegramNotification(parentName, childName, email, phone, childAge, source, message);
     try {
       await fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: data, headers:{'Accept':'application/json'} });
     } catch(err) {}
