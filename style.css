@@ -1129,6 +1129,8 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 480px) {
   .container { padding: 0 16px; }
+  .shape { display: none; }
+  .btn { min-height: 48px; padding-left: 18px; padding-right: 18px; }
 
   /* Hero */
   .hero-title { font-size: 1.6rem; }
@@ -1184,8 +1186,11 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 360px) {
   .container { padding: 0 12px; }
   .hero-title { font-size: 1.5rem; }
+  .hero-badge { white-space: normal; }
   .hero-stats { gap: 12px; }
   .hero-stat .num { font-size: 1.1rem; }
+  .pricing-tabs { width: 100%; }
+  .pricing-tab { flex: 1; padding-left: 8px; padding-right: 8px; text-align: center; }
   .section-title { font-size: 1.3rem; }
   .new-pricing-card { padding: 16px 12px; }
   .price-val { font-size: 1.3rem; }

@@ -6,7 +6,7 @@ import type { ScheduleEntry, Student } from '@/lib/types';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const dayIndexes = [1, 2, 3, 4, 5, 6, 0];
-const hours = Array.from({ length: 15 }, (_, index) => index + 7);
+const hours = Array.from({ length: 24 }, (_, index) => index);
 
 export function ScheduleWorkspace({
   students,
@@ -73,15 +73,15 @@ export function ScheduleWorkspace({
     <div className="space-y-6">
       <section className="grid gap-4 lg:grid-cols-[1fr_380px]">
         <div className="card overflow-hidden">
-          <div className="bg-slate-950 p-6 text-white">
+          <div className="bg-slate-950 p-4 text-white sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
+              <div className="max-w-3xl">
                 <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold text-violet-100">
                   <CalendarClock size={14} /> Class Calendar
                 </div>
-                <h2 className="text-3xl font-black tracking-tight">Know exactly who you teach today, tomorrow, and this week.</h2>
+                <h2 className="text-2xl font-black tracking-tight sm:text-3xl">Know exactly who you teach today, tomorrow, and this week.</h2>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-right">
+              <div className="grid w-full grid-cols-2 gap-2 text-left sm:w-auto sm:text-right">
                 <Metric label="Today" value={String(todaysClasses.length)} />
                 <Metric label="Weekly hrs" value={String(weeklyHours)} />
               </div>
@@ -104,9 +104,9 @@ export function ScheduleWorkspace({
                 <button className="w-full rounded-lg border border-slate-200 p-3 text-left hover:bg-slate-50" key={entry.id} onClick={() => setEditing(entry)}>
                   <div className="flex items-center justify-between">
                     <div className="font-black">{student?.child_name || entry.title || 'Class'}</div>
-                    <span className="badge bg-violet-50 text-brand">{formatHour(entry.start_hour)} · {entry.duration_hours}h</span>
+                    <span className="badge bg-violet-50 text-brand">{formatHour(entry.start_hour)} - {entry.duration_hours}h</span>
                   </div>
-                  <div className="mt-1 text-xs font-semibold text-slate-500">{student?.parent_name || 'Unlinked'} {entry.note ? `· ${entry.note}` : ''}</div>
+                  <div className="mt-1 text-xs font-semibold text-slate-500">{student?.parent_name || 'Unlinked'} {entry.note ? `- ${entry.note}` : ''}</div>
                 </button>
               );
             })}
@@ -117,7 +117,7 @@ export function ScheduleWorkspace({
         </div>
       </section>
 
-      <section className="card overflow-hidden">
+      <section className="card overflow-hidden" id="schedule-add-slot">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-4">
           <div>
             <h3 className="text-lg font-black">Weekly Timetable</h3>
@@ -152,7 +152,7 @@ export function ScheduleWorkspace({
                       {entry && startsHere ? (
                         <div className="rounded-lg bg-slate-950 p-3 text-white shadow-sm">
                           <div className="text-sm font-black">{student?.child_name || entry.title || 'Class'}</div>
-                          <div className="mt-1 text-xs font-semibold text-slate-300">{entry.duration_hours}h · {student?.parent_name || 'Unlinked'}</div>
+                          <div className="mt-1 text-xs font-semibold text-slate-300">{entry.duration_hours}h - {student?.parent_name || 'Unlinked'}</div>
                         </div>
                       ) : entry ? (
                         <div className="text-xs font-bold text-slate-400">continues</div>
@@ -199,8 +199,8 @@ function SlotModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4" onClick={onClose}>
-      <form className="card w-full max-w-xl p-5" onSubmit={onSave} onClick={(event) => event.stopPropagation()}>
-        <div className="mb-4 flex items-center justify-between">
+      <form className="card max-h-[92vh] w-full max-w-xl overflow-auto p-4 sm:p-5" onSubmit={onSave} onClick={(event) => event.stopPropagation()}>
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="text-xl font-black">{entry ? 'Edit Class Slot' : 'Add Class Slot'}</h3>
             <p className="text-sm font-semibold text-slate-500">Assign a student to a weekly recurring class time.</p>
@@ -226,9 +226,9 @@ function SlotModal({
           <input className="input" name="title" defaultValue={entry?.title || ''} placeholder="Optional title" />
           <textarea className="textarea md:col-span-2" name="note" defaultValue={entry?.note || ''} placeholder="Class note: tactics, trial, tournament prep..." />
         </div>
-        <div className="mt-4 flex justify-between gap-2">
+        <div className="mt-4 flex flex-wrap justify-between gap-2">
           {entry ? <button className="btn btn-danger" type="button" onClick={() => onDelete(entry.id)}><Trash2 size={15} /> Delete</button> : <span />}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button className="btn" type="button" onClick={onClose}>Cancel</button>
             <button className="btn btn-primary">Save Slot</button>
           </div>
