@@ -55,7 +55,7 @@ export default async function OverviewPage() {
           <h2 className="text-lg font-black">Recent Leads</h2>
           <div className="mt-4 space-y-3">
             {recent.map((lead) => (
-              <div className="flex items-center justify-between rounded-lg border border-slate-100 p-3" key={lead.id}>
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-100 p-3" key={lead.id}>
                 <div>
                   <div className="font-extrabold">{lead.parent_name}</div>
                   <div className="text-xs font-semibold text-slate-500">{lead.child_name} · {relativeTime(lead.created_at)}</div>

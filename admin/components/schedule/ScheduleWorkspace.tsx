@@ -25,6 +25,7 @@ export function ScheduleWorkspace({
   const todaysClasses = schedule
     .filter((entry) => entry.day === today)
     .sort((a, b) => a.start_hour - b.start_hour);
+  const weeklySorted = [...schedule].sort((a, b) => a.day - b.day || a.start_hour - b.start_hour);
   const weeklyHours = schedule.reduce((sum, entry) => sum + Number(entry.duration_hours || 1), 0);
 
   async function persist(next: ScheduleEntry[]) {
@@ -128,7 +129,27 @@ export function ScheduleWorkspace({
           </button>
         </div>
 
-        <div className="overflow-auto">
+        <div className="space-y-3 p-4 md:hidden">
+          {weeklySorted.map((entry) => {
+            const student = studentMap.get(entry.student_id);
+            const dayLabel = days[dayIndexes.indexOf(entry.day)] || 'Sun';
+            return (
+              <button className="w-full rounded-lg border border-slate-200 bg-white p-3 text-left shadow-sm" key={entry.id} onClick={() => setEditing(entry)}>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="font-black">{student?.child_name || entry.title || 'Class'}</div>
+                  <span className="badge bg-violet-50 text-brand">{dayLabel} {formatHour(entry.start_hour)}</span>
+                </div>
+                <div className="mt-1 text-xs font-semibold text-slate-500">{entry.duration_hours}h - {student?.parent_name || 'Unlinked'}</div>
+                {entry.note ? <div className="mt-2 rounded-md bg-slate-50 p-2 text-xs font-semibold text-slate-600">{entry.note}</div> : null}
+              </button>
+            );
+          })}
+          {weeklySorted.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-slate-300 p-5 text-center text-sm font-bold text-slate-500">No weekly slots yet. Tap Add Slot to schedule the first class.</div>
+          ) : null}
+        </div>
+
+        <div className="hidden overflow-auto md:block">
           <div className="min-w-[980px]">
             <div className="grid grid-cols-[84px_repeat(7,minmax(120px,1fr))] border-b border-slate-200 bg-slate-50">
               <div className="p-3 text-xs font-black uppercase text-slate-500">Time</div>

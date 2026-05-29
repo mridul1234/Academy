@@ -62,11 +62,11 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
   return (
     <>
       <div className="card mb-5 flex flex-wrap items-center gap-3 p-4">
-        <div className="relative min-w-[260px] flex-1">
+        <div className="relative min-w-0 flex-1 basis-full sm:min-w-[260px] sm:basis-auto">
           <Search className="absolute left-3 top-3 text-slate-400" size={16} />
           <input className="input pl-9" placeholder="Search name, phone, email..." value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
-        <select className="select w-auto" value={status} onChange={(e) => setStatus(e.target.value as LeadStatus | 'all')}>
+        <select className="select w-full sm:w-auto" value={status} onChange={(e) => setStatus(e.target.value as LeadStatus | 'all')}>
           <option value="all">All statuses</option>
           {statusOrder.map((item) => <option value={item} key={item}>{statusLabels[item]}</option>)}
         </select>
@@ -113,7 +113,7 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
 
       {showNew ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4" onClick={() => setShowNew(false)}>
-          <form className="card w-full max-w-2xl p-5" onSubmit={createLead} onClick={(e) => e.stopPropagation()}>
+          <form className="card max-h-[92vh] w-full max-w-2xl overflow-auto p-4 sm:p-5" onSubmit={createLead} onClick={(e) => e.stopPropagation()}>
             <h2 className="mb-4 text-xl font-black">Add Lead</h2>
             <div className="grid gap-3 md:grid-cols-2">
               <input className="input" name="parentName" placeholder="Parent name" required />
@@ -125,7 +125,7 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
               <select className="select md:col-span-2" name="interested_plan">{Object.entries(planLabels).map(([key, label]) => <option key={key} value={key}>{label} · {currency(planAmount(key))}</option>)}</select>
               <textarea className="textarea md:col-span-2" name="message" placeholder="Notes or message" />
             </div>
-            <div className="mt-4 flex justify-end gap-2"><button className="btn" type="button" onClick={() => setShowNew(false)}>Cancel</button><button className="btn btn-primary">Save Lead</button></div>
+            <div className="mt-4 flex flex-wrap justify-end gap-2"><button className="btn" type="button" onClick={() => setShowNew(false)}>Cancel</button><button className="btn btn-primary">Save Lead</button></div>
           </form>
         </div>
       ) : null}
@@ -138,13 +138,13 @@ function LeadRow({ lead, onOpen, onPatch }: { lead: Lead; onOpen: () => void; on
   return (
     <tr>
       <td><button className="text-left" onClick={onOpen}><div className="font-extrabold">{lead.parent_name}</div><div className="text-xs font-semibold text-slate-500">{lead.child_name} · {lead.child_age || '-'} yrs</div></button></td>
-      <td><a className="font-bold text-brand" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank">{lead.phone}</a><div className="text-xs text-slate-500">{lead.email}</div></td>
-      <td><span className="badge bg-slate-100 text-slate-700">{sourceLabels[lead.source]}</span></td>
-      <td>{planLabels[lead.interested_plan || ''] || '-'}</td>
-      <td><select className="select min-w-[150px]" value={lead.status} onChange={(e) => onPatch(lead.id, { status: e.target.value as LeadStatus, last_contacted_at: new Date().toISOString() })}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
-      <td>{lead.is_paid ? <span className="badge bg-emerald-50 text-emerald-700"><Check size={13} /> Paid {currency(lead.payment_amount)}</span> : <button className="btn" onClick={() => onPatch(lead.id, { is_paid: true, payment_amount: planAmount(lead.interested_plan), payment_date: new Date().toISOString().slice(0, 10) })}>Mark paid</button>}</td>
-      <td className="text-sm font-semibold text-slate-500">{relativeTime(lead.created_at)}</td>
-      <td><div className="flex gap-1"><button className="btn" onClick={onOpen}><StickyNote size={15} /></button><a className="btn" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank"><MessageCircle size={15} /></a><button className="btn btn-danger" onClick={() => onPatch(lead.id, { archived: true })}><Archive size={15} /></button></div></td>
+      <td data-label="Contact"><a className="font-bold text-brand" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank">{lead.phone}</a><div className="break-all text-xs text-slate-500">{lead.email}</div></td>
+      <td data-label="Source"><span className="badge bg-slate-100 text-slate-700">{sourceLabels[lead.source]}</span></td>
+      <td data-label="Plan">{planLabels[lead.interested_plan || ''] || '-'}</td>
+      <td data-label="Status"><select className="select min-w-0 sm:min-w-[150px]" value={lead.status} onChange={(e) => onPatch(lead.id, { status: e.target.value as LeadStatus, last_contacted_at: new Date().toISOString() })}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
+      <td data-label="Payment">{lead.is_paid ? <span className="badge bg-emerald-50 text-emerald-700"><Check size={13} /> Paid {currency(lead.payment_amount)}</span> : <button className="btn" onClick={() => onPatch(lead.id, { is_paid: true, payment_amount: planAmount(lead.interested_plan), payment_date: new Date().toISOString().slice(0, 10) })}>Mark paid</button>}</td>
+      <td data-label="Lead Date" className="text-sm font-semibold text-slate-500">{relativeTime(lead.created_at)}</td>
+      <td data-label="Actions"><div className="flex flex-wrap gap-1"><button className="btn" onClick={onOpen}><StickyNote size={15} /></button><a className="btn" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank"><MessageCircle size={15} /></a><button className="btn btn-danger" onClick={() => onPatch(lead.id, { archived: true })}><Archive size={15} /></button></div></td>
     </tr>
   );
 }

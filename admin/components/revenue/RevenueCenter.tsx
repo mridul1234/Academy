@@ -103,7 +103,7 @@ export function RevenueCenter({
 
       <section className="grid gap-6 xl:grid-cols-[1fr_430px]">
         <div className="card p-5">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-black">Revenue Momentum</h2>
               <p className="text-sm font-semibold text-slate-500">Every manual/student payment you add appears here.</p>
@@ -172,13 +172,13 @@ export function RevenueCenter({
             <tbody>
               {revenue.map((entry) => (
                 <tr key={entry.id}>
-                  <td>{dateLabel(entry.transaction_date)}</td>
-                  <td className="font-bold">{entry.student_name || '-'}</td>
-                  <td>{planLabels[entry.plan_type || ''] || entry.plan_type || '-'}</td>
-                  <td className="font-black text-brand">{currency(entry.amount)}</td>
-                  <td><span className="badge bg-slate-100 text-slate-700">{entry.payment_method}</span></td>
-                  <td className="max-w-[260px] text-sm text-slate-500">{stripStudentMarker(entry.description) || '-'}</td>
-                  <td><button className="btn btn-danger" onClick={() => deletePayment(entry.id)}><Trash2 size={15} /></button></td>
+                  <td data-label="Date">{dateLabel(entry.transaction_date)}</td>
+                  <td data-label="Student / Payer" className="font-bold">{entry.student_name || '-'}</td>
+                  <td data-label="Plan">{planLabels[entry.plan_type || ''] || entry.plan_type || '-'}</td>
+                  <td data-label="Amount" className="font-black text-brand">{currency(entry.amount)}</td>
+                  <td data-label="Method"><span className="badge bg-slate-100 text-slate-700">{entry.payment_method}</span></td>
+                  <td data-label="Notes" className="max-w-[260px] text-sm text-slate-500">{stripStudentMarker(entry.description) || '-'}</td>
+                  <td data-label="Actions"><button className="btn btn-danger" onClick={() => deletePayment(entry.id)}><Trash2 size={15} /></button></td>
                 </tr>
               ))}
             </tbody>

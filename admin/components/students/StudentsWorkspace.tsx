@@ -197,15 +197,15 @@ export function StudentsWorkspace({
     <div className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="card overflow-hidden">
-          <div className="bg-slate-950 p-6 text-white">
+          <div className="bg-slate-950 p-4 text-white sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="max-w-3xl">
                 <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold text-violet-100">
                   <GraduationCap size={14} /> Academy Roster
                 </div>
-                <h2 className="text-3xl font-black tracking-tight">Students, renewals, sessions, and payments in one place.</h2>
+                <h2 className="text-2xl font-black tracking-tight sm:text-3xl">Students, renewals, sessions, and payments in one place.</h2>
               </div>
-              <div className="rounded-lg border border-white/10 bg-white/10 p-4 text-right">
+              <div className="w-full rounded-lg border border-white/10 bg-white/10 p-4 text-left sm:w-auto sm:text-right">
                 <div className="text-xs font-bold uppercase text-slate-300">Roster Revenue</div>
                 <div className="mt-1 text-2xl font-black">{currency(totalPaid)}</div>
               </div>
@@ -241,7 +241,7 @@ export function StudentsWorkspace({
       </section>
 
       <section id="add-student-panel" className="card p-5">
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-4 flex flex-wrap items-center gap-3">
           <div className="rounded-lg bg-violet-50 p-2 text-brand">
             <UserPlus size={19} />
           </div>
@@ -249,7 +249,7 @@ export function StudentsWorkspace({
             <h3 className="text-lg font-black">Add Student</h3>
             <p className="text-sm font-semibold text-slate-500">Backfill existing students or add a newly enrolled child</p>
           </div>
-          <button className="btn ml-auto" type="button" onClick={cleanupDuplicates}>
+          <button className="btn sm:ml-auto" type="button" onClick={cleanupDuplicates}>
             Clean duplicate payments
           </button>
         </div>
@@ -279,13 +279,13 @@ export function StudentsWorkspace({
 
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 p-4">
-          <div className="relative min-w-[260px] flex-1">
+          <div className="relative min-w-0 flex-1 basis-full sm:min-w-[260px] sm:basis-auto">
             <Search className="absolute left-3 top-3 text-slate-400" size={16} />
             <input className="input pl-9" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search student, parent, phone..." />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
             <Filter className="text-slate-400" size={16} />
-            <select className="select w-auto" value={status} onChange={(e) => setStatus(e.target.value as StatusFilter)}>
+            <select className="select w-full sm:w-auto" value={status} onChange={(e) => setStatus(e.target.value as StatusFilter)}>
               <option value="all">All students</option>
               <option value="active">Active</option>
               <option value="paused">Paused</option>
@@ -365,7 +365,7 @@ function AttentionItem({ student }: { student: EnrichedStudent }) {
       : `${student.remaining} sessions left`;
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 p-3">
       <div>
         <div className="font-black">{student.child_name}</div>
         <div className="text-xs font-semibold text-slate-500">{student.parent_name}</div>
@@ -418,15 +418,15 @@ function StudentCard({
 
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-sm font-black text-white">{initials}</div>
           <div>
             <div className="text-lg font-black">{student.child_name}</div>
             <div className="text-sm font-semibold text-slate-500">{student.parent_name}</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className={student.computedStatus === 'active' ? 'badge bg-emerald-50 text-emerald-700' : student.computedStatus === 'churned' ? 'badge bg-red-50 text-red-700' : 'badge bg-slate-100 text-slate-600'}>
             {student.computedStatus}
           </span>
@@ -457,7 +457,7 @@ function StudentCard({
       {student.notes ? <div className="mb-4 rounded-lg border border-violet-100 bg-violet-50 p-3 text-sm font-semibold text-violet-800">{student.notes}</div> : null}
 
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {student.phone ? <a className="btn" href={`tel:${student.phone}`}><Phone size={15} /></a> : null}
           {student.phone ? <a className="btn" href={`https://wa.me/91${student.phone}?text=${waText}`} target="_blank"><MessageCircle size={15} /></a> : null}
           {student.email ? <a className="btn" href={`mailto:${student.email}`}><Mail size={15} /></a> : null}
@@ -504,8 +504,8 @@ function EditStudentModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4" onClick={onClose}>
-      <form className="card max-h-[92vh] w-full max-w-4xl overflow-auto p-5" onSubmit={onSave} onClick={(event) => event.stopPropagation()}>
-        <div className="mb-4 flex items-center justify-between">
+      <form className="card max-h-[92vh] w-full max-w-4xl overflow-auto p-4 sm:p-5" onSubmit={onSave} onClick={(event) => event.stopPropagation()}>
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="text-xl font-black">Edit Student</h3>
             <p className="text-sm font-semibold text-slate-500">Update roster, renewal, sessions, contact, and coach notes.</p>
@@ -529,7 +529,7 @@ function EditStudentModal({
           </select>
           <textarea className="textarea lg:col-span-6" name="notes" rows={8} defaultValue={student.notes || ''} placeholder="Batch, goal, current focus, homework, parent preferences, session log..." />
         </div>
-        <div className="mt-4 flex justify-end gap-2">
+        <div className="mt-4 flex flex-wrap justify-end gap-2">
           <button className="btn" type="button" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary">Save Changes</button>
         </div>

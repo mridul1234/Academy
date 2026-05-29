@@ -35,7 +35,7 @@ export default async function AnalyticsPage() {
         <section className="card overflow-hidden">
           <table className="table">
             <thead><tr><th>Source</th><th>Leads</th><th>Enrolled</th><th>Conversion</th></tr></thead>
-            <tbody>{sourceRows.map((row) => <tr key={row.label}><td className="font-bold">{row.label}</td><td>{row.leads}</td><td>{row.enrolled}</td><td>{row.conversion}%</td></tr>)}</tbody>
+            <tbody>{sourceRows.map((row) => <tr key={row.label}><td data-label="Source" className="font-bold">{row.label}</td><td data-label="Leads">{row.leads}</td><td data-label="Enrolled">{row.enrolled}</td><td data-label="Conversion">{row.conversion}%</td></tr>)}</tbody>
           </table>
         </section>
         <section className="card p-5">

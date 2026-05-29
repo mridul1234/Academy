@@ -170,6 +170,12 @@ textarea {
   padding: 12px;
 }
 
+.recharts-responsive-container,
+.recharts-wrapper,
+.recharts-surface {
+  max-width: 100%;
+}
+
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
@@ -221,6 +227,10 @@ textarea {
     flex-wrap: wrap;
     width: 100%;
   }
+
+  .topbar .btn {
+    flex: 1 1 180px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -244,21 +254,82 @@ textarea {
   .btn {
     min-height: 40px;
     padding: 8px 11px;
+    white-space: normal;
   }
 
   .card {
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
   }
 
-  .card:has(.table) {
-    overflow-x: auto;
+  .input,
+  .select,
+  .textarea {
+    min-width: 0;
   }
 
   .table {
-    min-width: 720px;
+    display: block;
+    width: 100%;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 12px;
+  }
+
+  .table td {
+    border-bottom: 0;
+    padding: 8px 0;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 3px;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .table td:not([data-label])::before {
+    display: none;
+  }
+
+  .table td:empty {
+    display: none;
   }
 
   .kanban {
-    grid-template-columns: repeat(6, minmax(210px, 1fr));
+    grid-template-columns: 1fr;
+    overflow-x: visible;
+  }
+
+  .kanban-col {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar nav a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .content {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
