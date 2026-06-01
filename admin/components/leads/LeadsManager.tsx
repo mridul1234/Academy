@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Archive, Check, ExternalLink, MessageCircle, Plus, Search, StickyNote, Trash2 } from 'lucide-react';
-import type { Lead, LeadNote, LeadStatus } from '@/lib/types';
+import type { Lead, LeadNote, LeadSource, LeadStatus } from '@/lib/types';
 import { lostReasons, planLabels, sourceLabels, statusLabels, statusOrder, whatsappTemplate } from '@/lib/constants';
 import { currency, planAmount, relativeTime } from '@/lib/utils';
 import { StatusBadge } from './StatusBadge';
@@ -121,7 +121,7 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
               <input className="input" name="phone" placeholder="Phone" required />
               <input className="input" name="email" placeholder="Email" />
               <input className="input" name="childAge" placeholder="Child age" type="number" />
-              <select className="select" name="source"><option>website</option><option>facebook</option><option>instagram</option><option>google</option><option>word_of_mouth</option></select>
+              <select className="select" name="source">{Object.entries(sourceLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
               <select className="select md:col-span-2" name="interested_plan">{Object.entries(planLabels).map(([key, label]) => <option key={key} value={key}>{label} · {currency(planAmount(key))}</option>)}</select>
               <textarea className="textarea md:col-span-2" name="message" placeholder="Notes or message" />
             </div>
@@ -139,7 +139,11 @@ function LeadRow({ lead, onOpen, onPatch }: { lead: Lead; onOpen: () => void; on
     <tr>
       <td><button className="text-left" onClick={onOpen}><div className="font-extrabold">{lead.parent_name}</div><div className="text-xs font-semibold text-slate-500">{lead.child_name} · {lead.child_age || '-'} yrs</div></button></td>
       <td data-label="Contact"><a className="font-bold text-brand" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank">{lead.phone}</a><div className="break-all text-xs text-slate-500">{lead.email}</div></td>
-      <td data-label="Source"><span className="badge bg-slate-100 text-slate-700">{sourceLabels[lead.source]}</span></td>
+      <td data-label="Source">
+        <select className="select min-w-0 sm:min-w-[150px]" value={lead.source} onChange={(e) => onPatch(lead.id, { source: e.target.value as LeadSource })}>
+          {Object.entries(sourceLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+        </select>
+      </td>
       <td data-label="Plan">{planLabels[lead.interested_plan || ''] || '-'}</td>
       <td data-label="Status"><select className="select min-w-0 sm:min-w-[150px]" value={lead.status} onChange={(e) => onPatch(lead.id, { status: e.target.value as LeadStatus, last_contacted_at: new Date().toISOString() })}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
       <td data-label="Payment">{lead.is_paid ? <span className="badge bg-emerald-50 text-emerald-700"><Check size={13} /> Paid {currency(lead.payment_amount)}</span> : <button className="btn" onClick={() => onPatch(lead.id, { is_paid: true, payment_amount: planAmount(lead.interested_plan), payment_date: new Date().toISOString().slice(0, 10) })}>Mark paid</button>}</td>
@@ -161,6 +165,12 @@ function LeadDrawer({ lead, notes, onClose, onPatch, onNote }: { lead: Lead; not
         </div>
         <div className="mb-5 grid gap-3 rounded-lg bg-slate-50 p-4 text-sm">
           <div><b>Status:</b> <StatusBadge status={lead.status} /></div>
+          <label>
+            <span className="mb-1 block font-bold">Confirmed source</span>
+            <select className="select" value={lead.source} onChange={(e) => onPatch(lead.id, { source: e.target.value as LeadSource })}>
+              {Object.entries(sourceLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+            </select>
+          </label>
           <div><b>Plan:</b> {planLabels[lead.interested_plan || ''] || '-'}</div>
           <div><b>Payment:</b> {lead.is_paid ? currency(lead.payment_amount) : 'Unpaid'}</div>
           <div><b>Message:</b> {lead.message || '-'}</div>

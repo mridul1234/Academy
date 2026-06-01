@@ -1,5 +1,5 @@
 export type LeadStatus = 'new' | 'contacted' | 'demo_scheduled' | 'demo_done' | 'enrolled' | 'lost';
-export type LeadSource = 'facebook' | 'instagram' | 'google' | 'word_of_mouth' | 'website' | 'other';
+export type LeadSource = 'unknown' | 'facebook' | 'instagram' | 'google' | 'word_of_mouth' | 'website' | 'other';
 export type StudentStatus = 'active' | 'paused' | 'churned';
 
 export type Lead = {

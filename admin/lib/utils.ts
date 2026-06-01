@@ -23,6 +23,7 @@ export function uid(prefix = 'id') {
 
 export function normalizeSource(source?: string | null) {
   const value = (source || '').toLowerCase();
+  if (!value || value.includes('unknown') || value.includes("don't know") || value.includes('dont know')) return 'unknown';
   if (value.includes('facebook')) return 'facebook';
   if (value.includes('instagram')) return 'instagram';
   if (value.includes('google')) return 'google';

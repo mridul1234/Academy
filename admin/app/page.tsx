@@ -16,6 +16,17 @@ export default async function OverviewPage() {
   const revenueThisMonth = data.revenue_entries
     .filter((entry) => entry.transaction_date.slice(0, 7) === month)
     .reduce((sum, entry) => sum + Number(entry.amount), 0);
+  const lastMonthDate = new Date(now);
+  lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+  const lastMonth = lastMonthDate.toISOString().slice(0, 7);
+  const revenueLastMonth = data.revenue_entries
+    .filter((entry) => entry.transaction_date.slice(0, 7) === lastMonth)
+    .reduce((sum, entry) => sum + Number(entry.amount), 0);
+  const momGrowth = revenueLastMonth
+    ? Math.round(((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100)
+    : revenueThisMonth > 0
+      ? 100
+      : 0;
   const enrolled = data.leads.filter((lead) => lead.status === 'enrolled').length;
   const conversion = data.leads.length ? Math.round((enrolled / data.leads.length) * 100) : 0;
   const demos = data.leads.filter((lead) => ['demo_scheduled', 'demo_done'].includes(lead.status)).length;
@@ -29,7 +40,7 @@ export default async function OverviewPage() {
         <KPICard label="Active Students" value={String(data.students.filter((s) => s.is_active).length)} detail="Currently enrolled" icon={GraduationCap} />
         <KPICard label="Conversion" value={`${conversion}%`} detail="Lead to enrolled" icon={Percent} />
         <KPICard label="Demos Booked" value={String(demos)} detail="Scheduled or done" icon={CalendarCheck} />
-        <KPICard label="MoM Growth" value="+12%" detail="Sample trend" icon={TrendingUp} />
+        <KPICard label="MoM Growth" value={`${momGrowth >= 0 ? '+' : ''}${momGrowth}%`} detail={`${currency(revenueLastMonth)} last month`} icon={TrendingUp} />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">

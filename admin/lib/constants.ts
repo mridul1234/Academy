@@ -12,6 +12,7 @@ export const statusLabels: Record<LeadStatus, string> = {
 export const statusOrder: LeadStatus[] = ['new', 'contacted', 'demo_scheduled', 'demo_done', 'enrolled', 'lost'];
 
 export const sourceLabels: Record<LeadSource, string> = {
+  unknown: "Don't know",
   facebook: 'Facebook',
   instagram: 'Instagram',
   google: 'Google',
