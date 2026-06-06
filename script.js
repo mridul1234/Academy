@@ -46,7 +46,7 @@ function sourceFromAttribution() {
   if (utmSource.includes('facebook') || utmSource.includes('meta') || utmSource.includes('instagram') || attribution.fbclid) {
     return 'Facebook';
   }
-  return 'Website';
+  return 'Google Search';
 }
 
 function appendAttribution(message = '') {
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
         text: message,
-        parse_mode: 'Markdown'
+        disable_web_page_preview: true
       })
     }).catch(err => console.warn('Telegram notification failed:', err));
   }
