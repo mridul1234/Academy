@@ -11,6 +11,61 @@ if (window.supabase) {
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
+const CHESSGUM_ATTRIBUTION_KEY = 'chessgum_attribution';
+
+function captureAttribution() {
+  const params = new URLSearchParams(window.location.search);
+  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid'];
+  const attribution = {};
+
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if (value) attribution[key] = value;
+  });
+
+  if (!Object.keys(attribution).length) return;
+
+  attribution.landing_page = window.location.href;
+  attribution.referrer = document.referrer || '';
+  attribution.captured_at = new Date().toISOString();
+
+  localStorage.setItem(CHESSGUM_ATTRIBUTION_KEY, JSON.stringify(attribution));
+}
+
+function getAttribution() {
+  try {
+    return JSON.parse(localStorage.getItem(CHESSGUM_ATTRIBUTION_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function sourceFromAttribution() {
+  const attribution = getAttribution();
+  const utmSource = String(attribution.utm_source || '').toLowerCase();
+  if (utmSource.includes('facebook') || utmSource.includes('meta') || utmSource.includes('instagram') || attribution.fbclid) {
+    return 'Facebook';
+  }
+  return 'Website';
+}
+
+function appendAttribution(message = '') {
+  const attribution = getAttribution();
+  if (!Object.keys(attribution).length) return message;
+
+  const details = [
+    attribution.utm_source ? `utm_source=${attribution.utm_source}` : '',
+    attribution.utm_medium ? `utm_medium=${attribution.utm_medium}` : '',
+    attribution.utm_campaign ? `utm_campaign=${attribution.utm_campaign}` : '',
+    attribution.utm_content ? `utm_content=${attribution.utm_content}` : '',
+    attribution.utm_term ? `utm_term=${attribution.utm_term}` : '',
+    attribution.fbclid ? `fbclid=${attribution.fbclid}` : '',
+    attribution.landing_page ? `landing_page=${attribution.landing_page}` : '',
+  ].filter(Boolean);
+
+  return [message, details.length ? `Attribution: ${details.join(' | ')}` : ''].filter(Boolean).join('\n\n');
+}
+
 function sendLeadToAdmin(parentName, childName, email, phone, childAge, source, message = '') {
   fetch(`${CHESSGUM_ADMIN_API_URL}/api/leads`, {
     method: 'POST',
@@ -23,6 +78,7 @@ function sendLeadToAdmin(parentName, childName, email, phone, childAge, source, 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  captureAttribution();
 
   /* ---- Navbar scroll effect ---- */
   const navbar = document.getElementById('navbar');
@@ -172,8 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const childAge = document.getElementById('childAge').value.trim();
-      const sourceEl = document.getElementById('source');
-      const source = sourceEl ? sourceEl.value : 'Not specified';
+      const source = sourceFromAttribution();
+      const attributionMessage = appendAttribution();
 
       // Show loading state
       const btn = form.querySelector('.form-submit');
@@ -192,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 🔔 Send Telegram notification
       sendTelegramNotification(parentName, childName, email, phone, childAge, source);
-      sendLeadToAdmin(parentName, childName, email, phone, childAge, source);
+      sendLeadToAdmin(parentName, childName, email, phone, childAge, source, attributionMessage);
 
       // ☁️ Insert to Supabase Database
       if (supabase) {
