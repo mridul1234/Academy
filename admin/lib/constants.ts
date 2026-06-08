@@ -31,12 +31,10 @@ export const planLabels: Record<string, string> = {
 };
 
 export const lostReasons = [
-  'Price too high',
-  'Timing mismatch',
-  'Child not interested',
-  'Enrolled elsewhere',
-  'No response',
-  'Other',
+  'Not able to contact for demo',
+  'Never responded post demo',
+  'Pricing different',
+  'Language problem',
 ];
 
 export const whatsappTemplate =

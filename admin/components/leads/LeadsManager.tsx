@@ -7,11 +7,14 @@ import { lostReasons, planLabels, sourceLabels, statusLabels, statusOrder, whats
 import { currency, planAmount, relativeTime } from '@/lib/utils';
 import { StatusBadge } from './StatusBadge';
 
+const activeStatusOrder = statusOrder.filter((item) => item !== 'lost');
+
 export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lead[]; initialNotes: LeadNote[] }) {
   const [leads, setLeads] = useState(initialLeads);
   const [notes, setNotes] = useState(initialNotes);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<LeadStatus | 'all'>('all');
+  const [section, setSection] = useState<'active' | 'lost'>('active');
   const [view, setView] = useState<'table' | 'kanban'>('table');
   const [selected, setSelected] = useState<Lead | null>(null);
   const [showNew, setShowNew] = useState(false);
@@ -20,9 +23,19 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
     const q = query.toLowerCase();
     return leads
       .filter((lead) => !lead.archived)
+      .filter((lead) => section === 'lost' ? lead.status === 'lost' : lead.status !== 'lost')
       .filter((lead) => status === 'all' || lead.status === status)
       .filter((lead) => [lead.parent_name, lead.child_name, lead.phone, lead.email].join(' ').toLowerCase().includes(q));
-  }, [leads, query, status]);
+  }, [leads, query, section, status]);
+
+  const activeCount = leads.filter((lead) => !lead.archived && lead.status !== 'lost').length;
+  const lostCount = leads.filter((lead) => !lead.archived && lead.status === 'lost').length;
+
+  function setLeadSection(nextSection: 'active' | 'lost') {
+    setSection(nextSection);
+    setStatus('all');
+    if (nextSection === 'lost') setView('table');
+  }
 
   async function patchLead(id: string, updates: Partial<Lead>) {
     const res = await fetch(`/api/leads/${id}`, {
@@ -61,16 +74,29 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
 
   return (
     <>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button className={`btn ${section === 'active' ? 'btn-primary' : ''}`} onClick={() => setLeadSection('active')}>
+          Main Leads <span className="badge bg-white/80 text-slate-700">{activeCount}</span>
+        </button>
+        <button className={`btn ${section === 'lost' ? 'btn-primary' : ''}`} onClick={() => setLeadSection('lost')}>
+          Lost Leads <span className="badge bg-white/80 text-slate-700">{lostCount}</span>
+        </button>
+      </div>
+
       <div className="card mb-5 flex flex-wrap items-center gap-3 p-4">
         <div className="relative min-w-0 flex-1 basis-full sm:min-w-[260px] sm:basis-auto">
           <Search className="absolute left-3 top-3 text-slate-400" size={16} />
           <input className="input pl-9" placeholder="Search name, phone, email..." value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
-        <select className="select w-full sm:w-auto" value={status} onChange={(e) => setStatus(e.target.value as LeadStatus | 'all')}>
-          <option value="all">All statuses</option>
-          {statusOrder.map((item) => <option value={item} key={item}>{statusLabels[item]}</option>)}
-        </select>
-        <button className="btn" onClick={() => setView(view === 'table' ? 'kanban' : 'table')}>{view === 'table' ? 'Kanban' : 'Table'}</button>
+        {section === 'active' ? (
+          <>
+            <select className="select w-full sm:w-auto" value={status} onChange={(e) => setStatus(e.target.value as LeadStatus | 'all')}>
+              <option value="all">All active statuses</option>
+              {activeStatusOrder.map((item) => <option value={item} key={item}>{statusLabels[item]}</option>)}
+            </select>
+            <button className="btn" onClick={() => setView(view === 'table' ? 'kanban' : 'table')}>{view === 'table' ? 'Kanban' : 'Table'}</button>
+          </>
+        ) : null}
         <button className="btn btn-primary" onClick={() => setShowNew(true)}><Plus size={16} /> New Lead</button>
       </div>
 
@@ -79,17 +105,17 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
           <table className="table">
             <thead>
               <tr>
-                <th>Parent / Child</th><th>Contact</th><th>Source</th><th>Plan</th><th>Status</th><th>Payment</th><th>Lead Date</th><th>Actions</th>
+                <th>Parent / Child</th><th>Contact</th><th>Source</th><th>Plan</th><th>Status</th>{section === 'lost' ? <th>Lost Reason</th> : null}<th>Payment</th><th>Lead Date</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((lead) => <LeadRow key={lead.id} lead={lead} onOpen={() => setSelected(lead)} onPatch={patchLead} />)}
+              {filtered.map((lead) => <LeadRow key={lead.id} lead={lead} showLostReason={section === 'lost'} onOpen={() => setSelected(lead)} onPatch={patchLead} />)}
             </tbody>
           </table>
         </div>
       ) : (
         <div className="kanban">
-          {statusOrder.map((item) => (
+          {activeStatusOrder.map((item) => (
             <div className="kanban-col" key={item}>
               <div className="mb-3 flex items-center justify-between">
                 <div className="text-sm font-black">{statusLabels[item]}</div>
@@ -133,8 +159,16 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
   );
 }
 
-function LeadRow({ lead, onOpen, onPatch }: { lead: Lead; onOpen: () => void; onPatch: (id: string, updates: Partial<Lead>) => void }) {
+function LeadRow({ lead, showLostReason, onOpen, onPatch }: { lead: Lead; showLostReason: boolean; onOpen: () => void; onPatch: (id: string, updates: Partial<Lead>) => void }) {
   const waText = encodeURIComponent(whatsappTemplate.replace('{parent}', lead.parent_name).replace('{child}', lead.child_name));
+  function updateStatus(nextStatus: LeadStatus) {
+    onPatch(lead.id, {
+      status: nextStatus,
+      last_contacted_at: new Date().toISOString(),
+      ...(nextStatus === 'lost' ? {} : { lost_reason: null }),
+    });
+  }
+
   return (
     <tr>
       <td><button className="text-left" onClick={onOpen}><div className="font-extrabold">{lead.parent_name}</div><div className="text-xs font-semibold text-slate-500">{lead.child_name} · {lead.child_age || '-'} yrs</div></button></td>
@@ -145,7 +179,16 @@ function LeadRow({ lead, onOpen, onPatch }: { lead: Lead; onOpen: () => void; on
         </select>
       </td>
       <td data-label="Plan">{planLabels[lead.interested_plan || ''] || '-'}</td>
-      <td data-label="Status"><select className="select min-w-0 sm:min-w-[150px]" value={lead.status} onChange={(e) => onPatch(lead.id, { status: e.target.value as LeadStatus, last_contacted_at: new Date().toISOString() })}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
+      <td data-label="Status"><select className="select min-w-0 sm:min-w-[150px]" value={lead.status} onChange={(e) => updateStatus(e.target.value as LeadStatus)}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
+      {showLostReason ? (
+        <td data-label="Lost Reason">
+          <select className="select min-w-0 sm:min-w-[210px]" value={lead.lost_reason || ''} onChange={(e) => onPatch(lead.id, { lost_reason: e.target.value || null, status: 'lost' })}>
+            <option value="">Choose reason</option>
+            {lead.lost_reason && !lostReasons.includes(lead.lost_reason) ? <option value={lead.lost_reason}>{lead.lost_reason}</option> : null}
+            {lostReasons.map((reason) => <option key={reason} value={reason}>{reason}</option>)}
+          </select>
+        </td>
+      ) : null}
       <td data-label="Payment">{lead.is_paid ? <span className="badge bg-emerald-50 text-emerald-700"><Check size={13} /> Paid {currency(lead.payment_amount)}</span> : <button className="btn" onClick={() => onPatch(lead.id, { is_paid: true, payment_amount: planAmount(lead.interested_plan), payment_date: new Date().toISOString().slice(0, 10) })}>Mark paid</button>}</td>
       <td data-label="Lead Date" className="text-sm font-semibold text-slate-500">{relativeTime(lead.created_at)}</td>
       <td data-label="Actions"><div className="flex flex-wrap gap-1"><button className="btn" onClick={onOpen}><StickyNote size={15} /></button><a className="btn" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank"><MessageCircle size={15} /></a><button className="btn btn-danger" onClick={() => onPatch(lead.id, { archived: true })}><Archive size={15} /></button></div></td>
@@ -156,6 +199,14 @@ function LeadRow({ lead, onOpen, onPatch }: { lead: Lead; onOpen: () => void; on
 function LeadDrawer({ lead, notes, onClose, onPatch, onNote }: { lead: Lead; notes: LeadNote[]; onClose: () => void; onPatch: (id: string, updates: Partial<Lead>) => void; onNote: (id: string, content: string) => void }) {
   const [note, setNote] = useState('');
   const waText = encodeURIComponent(whatsappTemplate.replace('{parent}', lead.parent_name).replace('{child}', lead.child_name));
+  function updateStatus(nextStatus: LeadStatus) {
+    onPatch(lead.id, {
+      status: nextStatus,
+      last_contacted_at: new Date().toISOString(),
+      ...(nextStatus === 'lost' ? {} : { lost_reason: null }),
+    });
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40" onClick={onClose}>
       <aside className="h-full w-full max-w-xl overflow-auto bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -176,14 +227,15 @@ function LeadDrawer({ lead, notes, onClose, onPatch, onNote }: { lead: Lead; not
           <div><b>Message:</b> {lead.message || '-'}</div>
         </div>
         <div className="mb-5 flex flex-wrap gap-2">
-          {statusOrder.map((item) => <button key={item} className="btn" onClick={() => onPatch(lead.id, { status: item })}>{statusLabels[item]}</button>)}
+          {statusOrder.map((item) => <button key={item} className="btn" onClick={() => updateStatus(item)}>{statusLabels[item]}</button>)}
           <a className="btn btn-primary" href={`https://wa.me/91${lead.phone}?text=${waText}`} target="_blank"><ExternalLink size={15} /> WhatsApp</a>
         </div>
         <label className="mb-5 block">
           <span className="mb-2 block text-sm font-bold">Lost reason</span>
-          <select className="select" value={lead.lost_reason || ''} onChange={(e) => onPatch(lead.id, { lost_reason: e.target.value, status: 'lost' })}>
-            <option value="">Not lost</option>
-            {lostReasons.map((reason) => <option key={reason}>{reason}</option>)}
+          <select className="select" value={lead.lost_reason || ''} onChange={(e) => onPatch(lead.id, { lost_reason: e.target.value || null, status: 'lost' })}>
+            <option value="">Choose reason</option>
+            {lead.lost_reason && !lostReasons.includes(lead.lost_reason) ? <option value={lead.lost_reason}>{lead.lost_reason}</option> : null}
+            {lostReasons.map((reason) => <option key={reason} value={reason}>{reason}</option>)}
           </select>
         </label>
         <form className="mb-5" onSubmit={(e) => { e.preventDefault(); if (note.trim()) { onNote(lead.id, note.trim()); setNote(''); } }}>
