@@ -14,7 +14,7 @@ ChessGum is an online educational platform offering expert online chess coaching
 ## Structure & Important Pages
 - [/about](https://www.chessgum.com/about): Information about our teaching philosophy, history, and the benefits of chess for children.
 - [/pricing](https://www.chessgum.com/pricing): Details on our flexible quarterly pricing plans for India.
-- [/contact](https://www.chessgum.com/contact): Contact information and enrollment form for the free demo class.
+- [/demo](https://www.chessgum.com/demo): Enrollment form for booking a free demo chess class.
 
 ## Optional Notes
 - The website is optimized for SEO and incorporates Schema markup (EducationalOrganization, FAQPage, AggregateRating) to better describe the academy's offerings to search engines and AI assistants.

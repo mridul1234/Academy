@@ -11,12 +11,22 @@
       "has": [{ "type": "host", "value": "academy-lovat-mu.vercel.app" }],
       "destination": "https://www.chessgum.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/demo",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/demo",
+      "permanent": true
     }
   ],
   "rewrites": [
     { "source": "/about",          "destination": "/about.html"          },
     { "source": "/pricing",        "destination": "/pricing.html"        },
-    { "source": "/contact",        "destination": "/contact.html"        },
+    { "source": "/demo",           "destination": "/demo.html"           },
     { "source": "/privacy-policy", "destination": "/privacy-policy.html" }
   ],
   "cleanUrls": true
