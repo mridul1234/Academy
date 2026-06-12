@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { CalendarDays, CheckCircle2, Clock, Filter, LogOut, PlayCircle, Search, Users, Video } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Filter, LogOut, PlayCircle, Search, Users, Video } from 'lucide-react';
 import { getCrmSession } from '@/lib/auth';
 import { curriculumStandard, nextTopicForPlacement, readPlacements } from '@/lib/curriculum';
 import { getCrmData } from '@/lib/data';
@@ -9,7 +9,7 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const tabs = ['active', 'upcoming', 'completed'] as const;
+const tabs = ['upcoming', 'completed'] as const;
 const views = ['sessions', 'curriculum', 'students'] as const;
 
 function paramValue(value: string | string[] | undefined) {
@@ -165,14 +165,18 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
   });
 
   const visibleSessions = roleSessions
-    .filter((item) => selectedTab === 'upcoming' && item.status === 'upcoming')
+    .filter((item) => item.status === selectedTab)
     .sort((a, b) => {
       const diff = new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime();
       return selectedSort === 'desc' ? -diff : diff;
     });
 
   const upcomingCount = roleSessions.filter((item) => item.status === 'upcoming').length;
-  const completedCount = 0;
+  const completedCount = roleSessions.filter((item) => item.status === 'completed').length;
+  const tabCounts = {
+    upcoming: upcomingCount,
+    completed: completedCount,
+  };
   const individualCount = visibleSessions.filter((item) => {
     const student = data.students.find((entry) => entry.id === item.student_id);
     return String(student?.plan_type || item.title).toLowerCase().includes('individual');
@@ -232,8 +236,33 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
                 <h1>{curriculumStandard.name}</h1>
                 <span>{curriculumStandard.description}</span>
               </div>
-              <strong>{curriculumStandard.levels.length} levels</strong>
+              <strong>{curriculumStandard.levels.reduce((count, level) => count + level.topics.length, 0)} sessions</strong>
             </div>
+
+            <section className="curriculum-outline" aria-label="Curriculum outline">
+              {curriculumStandard.levels.map((level) => (
+                <article key={level.id}>
+                  <div className="curriculum-outline-heading">
+                    <div>
+                      <p>{level.name}</p>
+                      <h2>{level.description}</h2>
+                    </div>
+                    <span>{level.topics.length} sessions</span>
+                  </div>
+                  <ol>
+                    {level.topics.map((topic, index) => (
+                      <li key={topic.id}>
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <div>
+                          <strong>{topic.title}</strong>
+                          <p>{topic.objective}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </article>
+              ))}
+            </section>
 
             <div className="curriculum-grid">
               {data.students.filter((student) => student.is_active).map((student) => {
@@ -311,7 +340,7 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
             <div className="hero-stat">
               <small>Total classes</small>
               <strong>{visibleSessions.length}</strong>
-              <span>Individual {individualCount} / Group {groupCount}</span>
+              <span>45 min each - Individual {individualCount} / Group {groupCount}</span>
             </div>
           </div>
 
@@ -319,7 +348,7 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
             <nav className="session-tabs" aria-label="Session status">
               {tabs.map((tab) => (
                 <a key={tab} className={selectedTab === tab ? 'session-tab-active' : ''} href={buildQuery(queryParams, { tab })}>
-                  {tab}
+                  {tab} <span>{tabCounts[tab]}</span>
                 </a>
               ))}
             </nav>

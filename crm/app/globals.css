@@ -307,7 +307,9 @@ input {
 
 .session-tabs a {
   display: inline-flex;
+  align-items: center;
   justify-content: center;
+  gap: 7px;
   min-width: 104px;
   border-radius: 7px;
   padding: 11px 14px;
@@ -317,6 +319,18 @@ input {
   text-decoration: none;
   text-transform: capitalize;
   white-space: nowrap;
+}
+
+.session-tabs a span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(6, 63, 53, 0.08);
+  color: var(--forest);
+  font-size: 0.72rem;
+  font-weight: 940;
 }
 
 .session-tab-active {
@@ -715,6 +729,103 @@ input {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 14px;
+}
+
+.curriculum-outline {
+  display: grid;
+  gap: 14px;
+}
+
+.curriculum-outline article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.curriculum-outline-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.curriculum-outline-heading p {
+  margin: 0 0 5px;
+  color: var(--forest);
+  font-size: 0.72rem;
+  font-weight: 940;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.curriculum-outline-heading h2 {
+  margin: 0;
+  max-width: 760px;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 820;
+}
+
+.curriculum-outline-heading span {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--mint);
+  color: var(--forest);
+  padding: 8px 11px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.curriculum-outline ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.curriculum-outline li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid #e8edf0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+
+.curriculum-outline li > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--forest);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 940;
+}
+
+.curriculum-outline strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.25;
+  font-size: 0.94rem;
+  font-weight: 900;
+}
+
+.curriculum-outline li p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .curriculum-card {

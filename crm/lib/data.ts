@@ -5,6 +5,7 @@ import type { ClassSession, CoachProfile, CrmData, CrmSession, ScheduleEntry, Si
 
 const localPath = path.join(process.cwd(), '..', 'admin', 'lib', 'local-data.json');
 const scheduleMetricKey = 'class_schedule';
+const classDurationMinutes = 45;
 
 export const mridulCoach: CoachProfile = {
   id: 'coach_mridul',
@@ -90,7 +91,7 @@ function upcomingForStudent(entries: ScheduleEntry[], student: Student) {
     Array.from({ length: weeksToGenerate }, (_, weekOffset) => ({
       entry,
       startsAt: occurrenceInWeek(entry.day, entry.start_hour, weekOffset),
-      durationMinutes: Math.round(Number(entry.duration_hours || 1) * 60),
+      durationMinutes: classDurationMinutes,
     }))
   ));
 
