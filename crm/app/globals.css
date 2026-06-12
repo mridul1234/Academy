@@ -636,7 +636,7 @@ input {
 .class-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 999;
   display: grid;
   place-items: center;
   background: rgba(16, 20, 24, 0.46);
@@ -644,6 +644,8 @@ input {
 }
 
 .class-modal {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 16px;
   width: min(520px, 100%);
@@ -738,6 +740,11 @@ input {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.class-modal-actions .primary-action,
+.class-modal-actions .secondary-action {
+  min-width: 132px;
 }
 
 .empty-panel {
