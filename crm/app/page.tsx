@@ -12,6 +12,13 @@ type PageProps = {
 
 const tabs = ['upcoming', 'completed'] as const;
 const views = ['sessions', 'curriculum', 'students'] as const;
+const dateRanges = ['today', 'tomorrow', 'current_week', 'next_week'] as const;
+const dateRangeLabels: Record<(typeof dateRanges)[number], string> = {
+  today: 'Today',
+  tomorrow: 'Tomorrow',
+  current_week: 'Current Week',
+  next_week: 'Next Week',
+};
 
 function paramValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value || '';
@@ -21,6 +28,41 @@ function formatInputDate(value: Date) {
   const day = String(value.getDate()).padStart(2, '0');
   const month = String(value.getMonth() + 1).padStart(2, '0');
   return `${value.getFullYear()}-${month}-${day}`;
+}
+
+function addDays(value: Date, days: number) {
+  const date = new Date(value);
+  date.setDate(date.getDate() + days);
+  return date;
+}
+
+function dateRange(value: (typeof dateRanges)[number]) {
+  const today = new Date();
+  const day = today.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+
+  if (value === 'tomorrow') {
+    const tomorrow = addDays(today, 1);
+    const date = formatInputDate(tomorrow);
+    return { from: date, to: date };
+  }
+
+  if (value === 'current_week') {
+    return {
+      from: formatInputDate(addDays(today, mondayOffset)),
+      to: formatInputDate(addDays(today, mondayOffset + 6)),
+    };
+  }
+
+  if (value === 'next_week') {
+    return {
+      from: formatInputDate(addDays(today, mondayOffset + 7)),
+      to: formatInputDate(addDays(today, mondayOffset + 13)),
+    };
+  }
+
+  const date = formatInputDate(today);
+  return { from: date, to: date };
 }
 
 function sessionDate(value: string) {
@@ -150,8 +192,10 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
     ? (paramValue(params.tab) as (typeof tabs)[number])
     : 'upcoming';
   const selectedStudent = paramValue(params.student);
-  const selectedFrom = paramValue(params.from);
-  const selectedTo = paramValue(params.to);
+  const selectedRange = dateRanges.includes(paramValue(params.range) as (typeof dateRanges)[number])
+    ? (paramValue(params.range) as (typeof dateRanges)[number])
+    : 'today';
+  const selectedDateRange = dateRange(selectedRange);
   const selectedSort = paramValue(params.sort) || 'asc';
   const selectedView = views.includes(paramValue(params.view) as (typeof views)[number])
     ? (paramValue(params.view) as (typeof views)[number])
@@ -162,8 +206,7 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
   const queryParams = {
     tab: selectedTab,
     student: selectedStudent,
-    from: selectedFrom,
-    to: selectedTo,
+    range: selectedRange,
     sort: selectedSort,
     view: selectedView,
   };
@@ -172,8 +215,8 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
     if (data.session.role === 'student' && item.student_id !== data.session.subjectId) return false;
     if (selectedStudent && item.student_id !== selectedStudent) return false;
     const when = sessionDate(item.starts_at);
-    if (selectedFrom && when.inputDate < selectedFrom) return false;
-    if (selectedTo && when.inputDate > selectedTo) return false;
+    if (when.inputDate < selectedDateRange.from) return false;
+    if (when.inputDate > selectedDateRange.to) return false;
     return true;
   });
 
@@ -368,6 +411,7 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
             <form className="filter-grid" action="/">
               <input type="hidden" name="tab" value={selectedTab} />
               <input type="hidden" name="view" value={selectedView} />
+              <input type="hidden" name="range" value={selectedRange} />
               {data.session.role === 'coach' ? (
                 <label>
                   <span>Student</span>
@@ -381,14 +425,20 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
                   </select>
                 </label>
               ) : null}
-              <label>
-                <span>From</span>
-                <input name="from" type="date" defaultValue={selectedFrom} />
-              </label>
-              <label>
-                <span>To</span>
-                <input name="to" type="date" defaultValue={selectedTo} />
-              </label>
+              <div className="range-filter">
+                <span>Range</span>
+                <div>
+                  {dateRanges.map((range) => (
+                    <a
+                      key={range}
+                      className={selectedRange === range ? 'range-filter-active' : ''}
+                      href={buildQuery(queryParams, { range })}
+                    >
+                      {dateRangeLabels[range]}
+                    </a>
+                  ))}
+                </div>
+              </div>
               <label>
                 <span>Sort</span>
                 <select name="sort" defaultValue={selectedSort}>
@@ -400,7 +450,7 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
                 <Filter className="h-4 w-4" />
                 Apply
               </button>
-              <a className="clear-button" href={buildQuery(queryParams, { student: '', from: '', to: '', sort: 'asc' })}>
+              <a className="clear-button" href={buildQuery(queryParams, { student: '', range: 'today', sort: 'asc' })}>
                 Clear
               </a>
             </form>

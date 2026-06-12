@@ -341,22 +341,54 @@ input {
 
 .filter-grid {
   display: grid;
-  grid-template-columns: minmax(170px, 1.4fr) repeat(3, minmax(130px, 1fr)) auto auto;
+  grid-template-columns: minmax(170px, 1.1fr) minmax(360px, 1.8fr) minmax(150px, 0.8fr) auto auto;
   gap: 10px;
   align-items: end;
 }
 
-.filter-grid label {
+.filter-grid label,
+.range-filter {
   display: grid;
   gap: 6px;
 }
 
-.filter-grid label span {
+.filter-grid label span,
+.range-filter > span {
   color: #71808a;
   font-size: 0.68rem;
   font-weight: 880;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.range-filter > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  min-height: 44px;
+  border-radius: 8px;
+  background: var(--wash);
+  padding: 4px;
+}
+
+.range-filter a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  color: #62717c;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: 880;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.range-filter-active {
+  background: #fff;
+  color: var(--ink) !important;
+  box-shadow: 0 10px 24px rgba(16, 20, 24, 0.08);
 }
 
 .filter-grid select,
@@ -1223,6 +1255,10 @@ input {
     grid-template-columns: repeat(2, minmax(170px, 1fr));
   }
 
+  .range-filter {
+    grid-column: 1 / -1;
+  }
+
   .session-card {
     grid-template-columns: 112px minmax(0, 1fr);
   }
@@ -1262,6 +1298,10 @@ input {
 
   .filter-grid {
     grid-template-columns: 1fr;
+  }
+
+  .range-filter > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .session-tabs {
