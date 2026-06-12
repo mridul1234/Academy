@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCrmSession } from '@/lib/auth';
+import { savePlacement } from '@/lib/curriculum';
 import { getCrmData } from '@/lib/data';
 import { createZoomMeeting, isZoomConfigured } from '@/lib/zoom';
 
 export const runtime = 'nodejs';
 
-export async function GET(req: NextRequest) {
+async function launchZoomMeeting(
+  req: NextRequest,
+  options?: {
+    sessionId?: string;
+    selectedPlacement?: { levelId: string; completedTopicId: string };
+  },
+) {
   const session = await getCrmSession();
   if (!session) {
     return NextResponse.redirect(new URL('/login', req.url));
@@ -18,7 +25,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const sessionId = req.nextUrl.searchParams.get('session');
+  const sessionId = options?.sessionId || req.nextUrl.searchParams.get('session');
   const data = await getCrmData(session);
   const classSession = data.classSessions.find((item) => item.id === sessionId);
 
@@ -31,6 +38,7 @@ export async function GET(req: NextRequest) {
   }
 
   const student = data.students.find((item) => item.id === classSession.student_id);
+
   let meeting;
   try {
     meeting = await createZoomMeeting({
@@ -45,6 +53,26 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  if (session.role === 'coach' && options?.selectedPlacement?.levelId && options.selectedPlacement.completedTopicId) {
+    await savePlacement(classSession.student_id, options.selectedPlacement.levelId, options.selectedPlacement.completedTopicId);
+  }
+
   const redirectUrl = session.role === 'coach' ? meeting.start_url : meeting.join_url;
   return NextResponse.redirect(redirectUrl);
+}
+
+export async function GET(req: NextRequest) {
+  return launchZoomMeeting(req);
+}
+
+export async function POST(req: NextRequest) {
+  const form = await req.formData();
+
+  return launchZoomMeeting(req, {
+    sessionId: String(form.get('session') || ''),
+    selectedPlacement: {
+      levelId: String(form.get('level_id') || ''),
+      completedTopicId: String(form.get('completed_topic_id') || ''),
+    },
+  });
 }

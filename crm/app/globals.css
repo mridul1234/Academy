@@ -633,6 +633,113 @@ input {
   gap: 8px;
 }
 
+.class-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(16, 20, 24, 0.46);
+  padding: 20px;
+}
+
+.class-modal {
+  display: grid;
+  gap: 16px;
+  width: min(520px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 28px 80px rgba(16, 20, 24, 0.22);
+}
+
+.class-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.class-modal-header p {
+  margin: 0;
+  color: var(--mint-strong);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.class-modal-header h2 {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 1.5rem;
+  font-weight: 940;
+}
+
+.class-modal-close {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  font-weight: 840;
+}
+
+.class-current-topic {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  padding: 14px;
+}
+
+.class-current-topic span,
+.class-modal-fields span {
+  color: #71808a;
+  font-size: 0.68rem;
+  font-weight: 880;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.class-current-topic strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.class-modal-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.class-modal-fields label {
+  display: grid;
+  gap: 6px;
+}
+
+.class-modal-fields select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0 12px;
+}
+
+.class-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .empty-panel {
   border: 1px dashed var(--line-strong);
   border-radius: 8px;

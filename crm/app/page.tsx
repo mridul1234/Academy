@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
-import { CalendarDays, CheckCircle2, Filter, LogOut, PlayCircle, Search, Users, Video } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Filter, LogOut, PlayCircle, Search, Users } from 'lucide-react';
+import { SessionClassLauncher } from '@/components/SessionClassLauncher';
 import { getCrmSession } from '@/lib/auth';
 import { curriculumStandard, nextTopicForPlacement, readPlacements } from '@/lib/curriculum';
 import { getCrmData } from '@/lib/data';
@@ -64,11 +65,17 @@ function SessionCard({
   session,
   students,
   role,
+  currentLevelId,
+  currentLevelName,
+  currentTopicId,
   nextTopicTitle,
 }: {
   session: ClassSession;
   students: Student[];
   role: 'coach' | 'student';
+  currentLevelId: string;
+  currentLevelName: string;
+  currentTopicId: string;
   nextTopicTitle?: string;
 }) {
   const when = sessionDate(session.starts_at);
@@ -112,10 +119,16 @@ function SessionCard({
 
       <div className="session-card-actions">
         {!isCompleted ? (
-          <a className="primary-action" href={`/api/zoom/meeting?session=${encodeURIComponent(session.id)}`}>
-            <Video className="h-4 w-4" />
-            {role === 'coach' ? 'Start Zoom' : 'Join Zoom'}
-          </a>
+          <SessionClassLauncher
+            sessionId={session.id}
+            role={role}
+            studentName={name}
+            currentLevelId={currentLevelId}
+            currentLevelName={currentLevelName}
+            currentTopicId={currentTopicId}
+            currentTopicTitle={nextTopicTitle || 'Class topic'}
+            levels={curriculumStandard.levels}
+          />
         ) : (
           <button className="secondary-action">
             <PlayCircle className="h-4 w-4" />
@@ -409,13 +422,23 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
           <div className="session-cards">
             {visibleSessions.length ? (
               visibleSessions.map((session) => (
-                <SessionCard
-                  key={session.id}
-                  session={session}
-                  students={data.students}
-                  role={data.session.role}
-                  nextTopicTitle={nextTopicForPlacement(placementByStudent.get(session.student_id), data.students.find((student) => student.id === session.student_id)).topic.title}
-                />
+                (() => {
+                  const student = data.students.find((item) => item.id === session.student_id);
+                  const next = nextTopicForPlacement(placementByStudent.get(session.student_id), student);
+
+                  return (
+                    <SessionCard
+                      key={session.id}
+                      session={session}
+                      students={data.students}
+                      role={data.session.role}
+                      currentLevelId={next.level.id}
+                      currentLevelName={next.level.name}
+                      currentTopicId={next.topic.id}
+                      nextTopicTitle={next.topic.title}
+                    />
+                  );
+                })()
               ))
             ) : (
               <div className="empty-panel">
