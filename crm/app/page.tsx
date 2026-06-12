@@ -319,54 +319,6 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
               ))}
             </section>
 
-            <div className="curriculum-grid">
-              {data.students.filter((student) => student.is_active).map((student) => {
-                const placement = placementByStudent.get(student.id);
-                const next = nextTopicForPlacement(placement, student);
-
-                return (
-                  <article className="curriculum-card" key={student.id}>
-                    <div className="curriculum-student">
-                      <span>{initials(student.child_name)}</span>
-                      <div>
-                        <h2>{student.child_name}</h2>
-                        <p>Next topic: {next.isComplete ? 'Level completed' : next.topic.title}</p>
-                      </div>
-                    </div>
-
-                    <form action="/api/curriculum/placement" method="post" className="curriculum-form">
-                      <input type="hidden" name="student_id" value={student.id} />
-                      <label>
-                        <span>Student level</span>
-                        <select name="level_id" defaultValue={placement?.level_id || next.level.id}>
-                          {curriculumStandard.levels.map((level) => (
-                            <option key={level.id} value={level.id}>
-                              {level.name}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <label>
-                        <span>Last completed topic</span>
-                        <select name="completed_topic_id" defaultValue={placement?.completed_topic_id || ''}>
-                          <option value="">Nothing completed yet</option>
-                          {curriculumStandard.levels.map((level) => (
-                            <optgroup key={level.id} label={level.name}>
-                              {level.topics.map((topic) => (
-                                <option key={topic.id} value={topic.id}>
-                                  {topic.title}
-                                </option>
-                              ))}
-                            </optgroup>
-                          ))}
-                        </select>
-                      </label>
-                      <button className="filter-button">Save placement</button>
-                    </form>
-                  </article>
-                );
-              })}
-            </div>
           </section>
         ) : selectedView === 'students' ? (
           <section className="students-panel">
