@@ -10,3 +10,16 @@ npm run dev
 ```
 
 The CRM runs on `http://localhost:3002` by default.
+
+## Zoom API setup
+
+Create a Zoom Server-to-Server OAuth app in the Zoom App Marketplace and add the meeting create scope for your account. Then set these values in `.env.local`:
+
+```bash
+ZOOM_ACCOUNT_ID=
+ZOOM_CLIENT_ID=
+ZOOM_CLIENT_SECRET=
+ZOOM_USER_ID=me
+```
+
+Use `ZOOM_USER_ID=me` for the account owner, or set it to the host user's Zoom user ID/email if needed. The CRM `Start Zoom` button creates a 45-minute scheduled Zoom meeting and redirects the coach to the host start URL.

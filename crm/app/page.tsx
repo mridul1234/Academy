@@ -112,9 +112,9 @@ function SessionCard({
 
       <div className="session-card-actions">
         {!isCompleted ? (
-          <a className="primary-action" href={`/lesson?session=${encodeURIComponent(session.id)}`}>
+          <a className="primary-action" href={`/api/zoom/meeting?session=${encodeURIComponent(session.id)}`}>
             <Video className="h-4 w-4" />
-            Join
+            {role === 'coach' ? 'Start Zoom' : 'Join Zoom'}
           </a>
         ) : (
           <button className="secondary-action">
@@ -255,7 +255,6 @@ export default async function CrmHomePage({ searchParams }: PageProps) {
                         <span>{String(index + 1).padStart(2, '0')}</span>
                         <div>
                           <strong>{topic.title}</strong>
-                          <p>{topic.objective}</p>
                         </div>
                       </li>
                     ))}

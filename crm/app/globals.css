@@ -820,14 +820,6 @@ input {
   font-weight: 900;
 }
 
-.curriculum-outline li p {
-  margin: 5px 0 0;
-  color: var(--muted);
-  line-height: 1.45;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
 .curriculum-card {
   display: grid;
   gap: 18px;
