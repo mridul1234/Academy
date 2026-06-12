@@ -1,9 +1,6 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { getSupabase } from './supabase';
 import type { ClassSession, CoachProfile, CrmData, CrmSession, ScheduleEntry, SiteMetric, Student } from './types';
 
-const localPath = path.join(process.cwd(), 'lib', 'local-data.json');
 const scheduleMetricKey = 'class_schedule';
 const classDurationMinutes = 45;
 const crmStudentsTable = 'crm_students';
@@ -22,29 +19,19 @@ type InternalData = {
   site_metrics: SiteMetric[];
 };
 
-async function readLocal(): Promise<InternalData> {
-  try {
-    const text = await fs.readFile(localPath, 'utf8');
-    const data = JSON.parse(text) as InternalData;
-    return {
-      students: data.students || [],
-      site_metrics: data.site_metrics || [],
-    };
-  } catch {
-    return { students: [], site_metrics: [] };
-  }
-}
-
 export async function getInternalData(): Promise<InternalData> {
   const supabase = getSupabase();
-  if (!supabase) return readLocal();
+  if (!supabase) {
+    throw new Error('CRM Supabase is not configured.');
+  }
 
   const [students, metrics] = await Promise.all([
     supabase.from(crmStudentsTable).select('*').order('created_at', { ascending: false }),
     supabase.from(crmMetricsTable).select('*'),
   ]);
 
-  if (students.error || metrics.error) return readLocal();
+  if (students.error) throw students.error;
+  if (metrics.error) throw metrics.error;
 
   return {
     students: students.data || [],
