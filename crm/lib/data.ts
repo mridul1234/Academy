@@ -3,9 +3,11 @@ import path from 'path';
 import { getSupabase } from './supabase';
 import type { ClassSession, CoachProfile, CrmData, CrmSession, ScheduleEntry, SiteMetric, Student } from './types';
 
-const localPath = path.join(process.cwd(), '..', 'admin', 'lib', 'local-data.json');
+const localPath = path.join(process.cwd(), 'lib', 'local-data.json');
 const scheduleMetricKey = 'class_schedule';
 const classDurationMinutes = 45;
+const crmStudentsTable = 'crm_students';
+const crmMetricsTable = 'crm_site_metrics';
 
 export const mridulCoach: CoachProfile = {
   id: 'coach_mridul',
@@ -21,12 +23,16 @@ type InternalData = {
 };
 
 async function readLocal(): Promise<InternalData> {
-  const text = await fs.readFile(localPath, 'utf8');
-  const data = JSON.parse(text) as InternalData;
-  return {
-    students: data.students || [],
-    site_metrics: data.site_metrics || [],
-  };
+  try {
+    const text = await fs.readFile(localPath, 'utf8');
+    const data = JSON.parse(text) as InternalData;
+    return {
+      students: data.students || [],
+      site_metrics: data.site_metrics || [],
+    };
+  } catch {
+    return { students: [], site_metrics: [] };
+  }
 }
 
 export async function getInternalData(): Promise<InternalData> {
@@ -34,12 +40,11 @@ export async function getInternalData(): Promise<InternalData> {
   if (!supabase) return readLocal();
 
   const [students, metrics] = await Promise.all([
-    supabase.from('students').select('*').order('created_at', { ascending: false }),
-    supabase.from('site_metrics').select('*'),
+    supabase.from(crmStudentsTable).select('*').order('created_at', { ascending: false }),
+    supabase.from(crmMetricsTable).select('*'),
   ]);
 
-  if (students.error) throw students.error;
-  if (metrics.error) throw metrics.error;
+  if (students.error || metrics.error) return readLocal();
 
   return {
     students: students.data || [],

@@ -2,6 +2,13 @@
 
 Coach and student CRM workspace for ChessGum.
 
+The CRM uses the same Supabase project as the internal dashboard, but it reads its own CRM tables:
+
+- `crm_students`
+- `crm_site_metrics`
+
+Run `supabase/crm-standalone.sql` once in the Supabase SQL editor to create those tables and copy the current dashboard students/schedule into them. `lib/local-data.json` is a current snapshot fallback so the CRM does not break if the CRM tables are not available yet.
+
 ## Run locally
 
 ```bash
