@@ -22,6 +22,13 @@ create table if not exists public.crm_site_metrics (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.crm_curriculum_placements (
+  student_id text primary key references public.crm_students(id) on delete cascade,
+  level_id text not null,
+  completed_topic_id text,
+  updated_at timestamptz not null default now()
+);
+
 insert into public.crm_students (
   id,
   lead_id,

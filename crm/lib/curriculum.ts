@@ -1,5 +1,4 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { getSupabase } from './supabase';
 import type { Student } from './types';
 
 export type CurriculumTopic = {
@@ -182,7 +181,7 @@ export const curriculumStandard = {
   ] satisfies CurriculumLevel[],
 };
 
-const placementPath = path.join(process.cwd(), 'lib', 'curriculum-placements.json');
+const crmPlacementsTable = 'crm_curriculum_placements';
 
 export function allTopics() {
   return curriculumStandard.levels.flatMap((level) => level.topics.map((topic) => ({ ...topic, level })));
@@ -213,19 +212,28 @@ export function nextTopicForPlacement(placement?: StudentCurriculumPlacement | n
 }
 
 export async function readPlacements() {
-  try {
-    const raw = await fs.readFile(placementPath, 'utf8');
-    const parsed = JSON.parse(raw) as StudentCurriculumPlacement[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
+  const supabase = getSupabase();
+  if (!supabase) {
     return [];
   }
+
+  const { data, error } = await supabase
+    .from(crmPlacementsTable)
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (error) return [];
+  return data || [];
 }
 
 export async function savePlacement(studentId: string, levelId: string, completedTopicId?: string) {
+  const supabase = getSupabase();
+  if (!supabase) {
+    throw new Error('CRM Supabase is not configured.');
+  }
+
   const level = findLevel(levelId);
   const topicBelongsToLevel = !completedTopicId || level.topics.some((topic) => topic.id === completedTopicId);
-  const placements = await readPlacements();
   const nextPlacement: StudentCurriculumPlacement = {
     student_id: studentId,
     level_id: level.id,
@@ -233,8 +241,10 @@ export async function savePlacement(studentId: string, levelId: string, complete
     updated_at: new Date().toISOString(),
   };
 
-  const next = placements.filter((placement) => placement.student_id !== studentId);
-  next.push(nextPlacement);
-  await fs.writeFile(placementPath, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+  const { error } = await supabase
+    .from(crmPlacementsTable)
+    .upsert(nextPlacement, { onConflict: 'student_id' });
+
+  if (error) throw error;
   return nextPlacement;
 }

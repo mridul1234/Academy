@@ -6,8 +6,20 @@ The CRM uses the same Supabase project as the internal dashboard, but it reads i
 
 - `crm_students`
 - `crm_site_metrics`
+- `crm_curriculum_placements`
 
 Run `supabase/crm-standalone.sql` once in the Supabase SQL editor to create those tables and copy the current dashboard students/schedule into them.
+
+## Deploy on Vercel
+
+Create a standalone Vercel project for the CRM with these settings:
+
+```text
+Root Directory: crm
+Install Command: npm install
+Build Command: npm run build
+Output Directory: .next
+```
 
 ## Run locally
 
