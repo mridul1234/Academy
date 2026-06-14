@@ -60,6 +60,7 @@ function appendAttribution(message = '') {
     attribution.utm_content ? `utm_content=${attribution.utm_content}` : '',
     attribution.utm_term ? `utm_term=${attribution.utm_term}` : '',
     attribution.fbclid ? `fbclid=${attribution.fbclid}` : '',
+    attribution.gclid ? `gclid=${attribution.gclid}` : '',
     attribution.landing_page ? `landing_page=${attribution.landing_page}` : '',
   ].filter(Boolean);
 
