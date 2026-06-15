@@ -1,6 +1,7 @@
 import { CalendarCheck, Percent, TrendingUp, UsersRound } from 'lucide-react';
 import { DashboardShell } from '@/components/layout/DashboardShell';
 import { KPICard } from '@/components/dashboard/KPICard';
+import { DailyLeadsChart } from '@/components/dashboard/Charts';
 import { getDashboardData } from '@/lib/data';
 import { statusLabels } from '@/lib/constants';
 import {
@@ -58,6 +59,8 @@ export default async function OverviewPage() {
           icon={Percent}
         />
       </div>
+
+      <DailyLeadsChart leads={activeLeads} />
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="card overflow-hidden">

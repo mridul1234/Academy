@@ -20,16 +20,21 @@ const channelLabels: Record<AcquisitionChannel | 'overall', string> = {
 };
 
 function istDateKey(value: Date) {
-  return new Intl.DateTimeFormat('en-CA', {
+  const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Kolkata',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(value);
+  }).formatToParts(value);
+  const year = parts.find((part) => part.type === 'year')?.value;
+  const month = parts.find((part) => part.type === 'month')?.value;
+  const day = parts.find((part) => part.type === 'day')?.value;
+
+  return `${year}-${month}-${day}`;
 }
 
-export function todayKey() {
-  return istDateKey(new Date());
+export function todayKey(value = new Date()) {
+  return istDateKey(value);
 }
 
 export function leadDateKey(lead: Lead) {
