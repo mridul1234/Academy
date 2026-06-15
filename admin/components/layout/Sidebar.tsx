@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { CalendarDays, CreditCard, GraduationCap, LayoutDashboard, UsersRound } from 'lucide-react';
+import { CalendarDays, CreditCard, GraduationCap, LayoutDashboard, TrendingUp, UsersRound } from 'lucide-react';
 
 const nav = [
   { href: '/', label: 'Overview', icon: LayoutDashboard },
+  { href: '/acquisition', label: 'Acquisition', icon: TrendingUp },
   { href: '/leads', label: 'Leads', icon: UsersRound },
   { href: '/revenue', label: 'Revenue', icon: CreditCard },
   { href: '/students', label: 'Students', icon: GraduationCap },
