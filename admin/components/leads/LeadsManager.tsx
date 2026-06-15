@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { Archive, Check, ExternalLink, MessageCircle, Plus, Search, StickyNote, Trash2 } from 'lucide-react';
 import type { Lead, LeadNote, LeadSource, LeadStatus } from '@/lib/types';
 import { lostReasons, planLabels, sourceLabels, statusLabels, statusOrder, whatsappTemplate } from '@/lib/constants';
+import { acquisitionLabel, classifyLeadAcquisition, extractCampaignValue } from '@/lib/acquisition';
 import { currency, planAmount, relativeTime } from '@/lib/utils';
 import { StatusBadge } from './StatusBadge';
 
@@ -105,7 +106,7 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
           <table className="table">
             <thead>
               <tr>
-                <th>Parent / Child</th><th>Contact</th><th>Source</th><th>Plan</th><th>Status</th>{section === 'lost' ? <th>Lost Reason</th> : null}<th>Payment</th><th>Lead Date</th><th>Actions</th>
+                <th>Parent / Child</th><th>Contact</th><th>Source</th><th>Traffic</th><th>Plan</th><th>Status</th>{section === 'lost' ? <th>Lost Reason</th> : null}<th>Payment</th><th>Lead Date</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -161,6 +162,8 @@ export function LeadsManager({ initialLeads, initialNotes }: { initialLeads: Lea
 
 function LeadRow({ lead, showLostReason, onOpen, onPatch }: { lead: Lead; showLostReason: boolean; onOpen: () => void; onPatch: (id: string, updates: Partial<Lead>) => void }) {
   const waText = encodeURIComponent(whatsappTemplate.replace('{parent}', lead.parent_name).replace('{child}', lead.child_name));
+  const channel = classifyLeadAcquisition(lead);
+  const campaign = extractCampaignValue(lead, 'utm_campaign');
   function updateStatus(nextStatus: LeadStatus) {
     onPatch(lead.id, {
       status: nextStatus,
@@ -177,6 +180,12 @@ function LeadRow({ lead, showLostReason, onOpen, onPatch }: { lead: Lead; showLo
         <select className="select min-w-0 sm:min-w-[150px]" value={lead.source} onChange={(e) => onPatch(lead.id, { source: e.target.value as LeadSource })}>
           {Object.entries(sourceLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
         </select>
+      </td>
+      <td data-label="Traffic">
+        <span className={`badge ${channel === 'meta_ads' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'}`}>
+          {acquisitionLabel(channel)}
+        </span>
+        {campaign ? <div className="mt-1 max-w-[180px] truncate text-xs font-semibold text-slate-500">{campaign}</div> : null}
       </td>
       <td data-label="Plan">{planLabels[lead.interested_plan || ''] || '-'}</td>
       <td data-label="Status"><select className="select min-w-0 sm:min-w-[150px]" value={lead.status} onChange={(e) => updateStatus(e.target.value as LeadStatus)}>{statusOrder.map((item) => <option key={item} value={item}>{statusLabels[item]}</option>)}</select></td>
@@ -199,6 +208,10 @@ function LeadRow({ lead, showLostReason, onOpen, onPatch }: { lead: Lead; showLo
 function LeadDrawer({ lead, notes, onClose, onPatch, onNote }: { lead: Lead; notes: LeadNote[]; onClose: () => void; onPatch: (id: string, updates: Partial<Lead>) => void; onNote: (id: string, content: string) => void }) {
   const [note, setNote] = useState('');
   const waText = encodeURIComponent(whatsappTemplate.replace('{parent}', lead.parent_name).replace('{child}', lead.child_name));
+  const channel = classifyLeadAcquisition(lead);
+  const campaign = extractCampaignValue(lead, 'utm_campaign');
+  const creative = extractCampaignValue(lead, 'utm_content');
+  const term = extractCampaignValue(lead, 'utm_term');
   function updateStatus(nextStatus: LeadStatus) {
     onPatch(lead.id, {
       status: nextStatus,
@@ -216,6 +229,20 @@ function LeadDrawer({ lead, notes, onClose, onPatch, onNote }: { lead: Lead; not
         </div>
         <div className="mb-5 grid gap-3 rounded-lg bg-slate-50 p-4 text-sm">
           <div><b>Status:</b> <StatusBadge status={lead.status} /></div>
+          <div>
+            <b>Traffic:</b>{' '}
+            <span className={`badge ${channel === 'meta_ads' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'}`}>
+              {acquisitionLabel(channel)}
+            </span>
+          </div>
+          {campaign || creative || term ? (
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <div className="text-xs font-black uppercase tracking-wide text-slate-400">Ad attribution</div>
+              {campaign ? <div className="mt-1"><b>Campaign:</b> {campaign}</div> : null}
+              {creative ? <div><b>Creative:</b> {creative}</div> : null}
+              {term ? <div><b>Audience:</b> {term}</div> : null}
+            </div>
+          ) : null}
           <label>
             <span className="mb-1 block font-bold">Confirmed source</span>
             <select className="select" value={lead.source} onChange={(e) => onPatch(lead.id, { source: e.target.value as LeadSource })}>
