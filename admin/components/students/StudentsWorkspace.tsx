@@ -51,10 +51,7 @@ const levelOptions = [
 ];
 
 function completedTopicsFor(student: Student, progress: StudentCurriculumProgress) {
-  const saved = progress[student.id];
-  if (saved) return saved.completed_topics;
-  const curriculum = curriculumByLevel[normalizeCurriculumLevel(student.level)];
-  return curriculum.slice(0, Math.max(0, Number(student.sessions_done || 0)));
+  return progress[student.id]?.completed_topics || [];
 }
 
 export function StudentsWorkspace({
@@ -217,8 +214,6 @@ export function StudentsWorkspace({
       body: JSON.stringify({
         id: student.id,
         level,
-        sessions_done: completedTopics.length,
-        sessions_total: curriculumByLevel[level].length,
       }),
     });
     const studentData = await studentRes.json();
