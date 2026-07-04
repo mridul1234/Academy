@@ -3,6 +3,11 @@ import path from 'path';
 import { getSupabase } from './supabase';
 import type { DashboardData, Lead, LeadNote, RevenueEntry, ScheduleEntry, Student } from './types';
 import { normalizeSource, planAmount, uid } from './utils';
+import {
+  parseStudentCurriculum,
+  STUDENT_CURRICULUM_KEY,
+  type StudentCurriculumProgress,
+} from './student-curriculum';
 
 const localPath = path.join(process.cwd(), 'lib', 'local-data.json');
 const SCHEDULE_KEY = 'class_schedule';
@@ -306,4 +311,33 @@ export async function saveSchedule(entries: ScheduleEntry[]) {
   else data.site_metrics.push(metric);
   await writeLocal(data);
   return entries;
+}
+
+export async function saveStudentCurriculum(studentId: string, completedTopics: string[]) {
+  const dashboard = await getDashboardData();
+  const progress: StudentCurriculumProgress = parseStudentCurriculum(dashboard.site_metrics);
+  progress[studentId] = {
+    completed_topics: completedTopics,
+    updated_at: new Date().toISOString(),
+  };
+
+  const value = JSON.stringify(progress);
+  const supabase = getSupabase();
+  if (supabase) {
+    const { error } = await supabase.from('site_metrics').upsert({
+      key: STUDENT_CURRICULUM_KEY,
+      value,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+    return progress[studentId];
+  }
+
+  const data = await readLocal();
+  const index = data.site_metrics.findIndex((metric) => metric.key === STUDENT_CURRICULUM_KEY);
+  const metric = { key: STUDENT_CURRICULUM_KEY, value, updated_at: new Date().toISOString() };
+  if (index > -1) data.site_metrics[index] = metric;
+  else data.site_metrics.push(metric);
+  await writeLocal(data);
+  return progress[studentId];
 }

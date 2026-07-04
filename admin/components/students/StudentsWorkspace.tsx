@@ -22,6 +22,12 @@ import {
 } from 'lucide-react';
 import type { RevenueEntry, Student } from '@/lib/types';
 import { currency } from '@/lib/utils';
+import {
+  curriculumByLevel,
+  normalizeCurriculumLevel,
+  type CurriculumLevel,
+  type StudentCurriculumProgress,
+} from '@/lib/student-curriculum';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'churned';
 
@@ -44,12 +50,21 @@ const levelOptions = [
   { value: 'advanced', label: 'Advanced' },
 ];
 
+function completedTopicsFor(student: Student, progress: StudentCurriculumProgress) {
+  const saved = progress[student.id];
+  if (saved) return saved.completed_topics;
+  const curriculum = curriculumByLevel[normalizeCurriculumLevel(student.level)];
+  return curriculum.slice(0, Math.max(0, Number(student.sessions_done || 0)));
+}
+
 export function StudentsWorkspace({
   initialStudents,
   revenue,
+  initialCurriculumProgress,
 }: {
   initialStudents: Student[];
   revenue: RevenueEntry[];
+  initialCurriculumProgress: StudentCurriculumProgress;
 }) {
   const [students, setStudents] = useState(initialStudents);
   const [revenueEntries, setRevenueEntries] = useState(revenue);
@@ -57,6 +72,8 @@ export function StudentsWorkspace({
   const [status, setStatus] = useState<StatusFilter>('all');
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState<Student | null>(null);
+  const [curriculumStudent, setCurriculumStudent] = useState<Student | null>(null);
+  const [curriculumProgress, setCurriculumProgress] = useState(initialCurriculumProgress);
 
   const enriched = useMemo<EnrichedStudent[]>(() => {
     return students.map((student) => {
@@ -193,6 +210,33 @@ export function StudentsWorkspace({
     setEditing(null);
   }
 
+  async function saveCurriculum(student: Student, level: CurriculumLevel, completedTopics: string[]) {
+    const studentRes = await fetch('/api/students', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: student.id,
+        level,
+        sessions_done: completedTopics.length,
+        sessions_total: curriculumByLevel[level].length,
+      }),
+    });
+    const studentData = await studentRes.json();
+    if (!studentRes.ok) throw new Error(studentData.error || 'Student update failed');
+
+    const progressRes = await fetch('/api/student-curriculum', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: student.id, completed_topics: completedTopics }),
+    });
+    const progressData = await progressRes.json();
+    if (!progressRes.ok) throw new Error(progressData.error || 'Curriculum update failed');
+
+    setStudents((items) => items.map((item) => (item.id === student.id ? studentData.student : item)));
+    setCurriculumProgress((current) => ({ ...current, [student.id]: progressData.progress }));
+    setCurriculumStudent(null);
+  }
+
   return (
     <div className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
@@ -296,7 +340,15 @@ export function StudentsWorkspace({
 
         <div className="grid gap-4 p-4 xl:grid-cols-2">
           {filtered.map((student) => (
-            <StudentCard key={student.id} student={student} onPatch={patchStudent} onEdit={setEditing} onDelete={removeStudent} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              completedTopics={completedTopicsFor(student, curriculumProgress)}
+              onPatch={patchStudent}
+              onEdit={setEditing}
+              onCurriculum={setCurriculumStudent}
+              onDelete={removeStudent}
+            />
           ))}
           {filtered.length === 0 ? (
             <div className="col-span-full rounded-lg border border-dashed border-slate-300 p-8 text-center">
@@ -312,6 +364,15 @@ export function StudentsWorkspace({
           student={editing}
           onClose={() => setEditing(null)}
           onSave={saveEdit}
+        />
+      ) : null}
+
+      {curriculumStudent ? (
+        <CurriculumModal
+          student={curriculumStudent}
+          completedTopics={completedTopicsFor(curriculumStudent, curriculumProgress)}
+          onClose={() => setCurriculumStudent(null)}
+          onSave={saveCurriculum}
         />
       ) : null}
     </div>
@@ -379,13 +440,17 @@ function AttentionItem({ student }: { student: EnrichedStudent }) {
 
 function StudentCard({
   student,
+  completedTopics,
   onPatch,
   onEdit,
+  onCurriculum,
   onDelete,
 }: {
   student: EnrichedStudent;
+  completedTopics: string[];
   onPatch: (id: string, updates: Partial<Student>) => void;
   onEdit: (student: Student) => void;
+  onCurriculum: (student: Student) => void;
   onDelete: (id: string) => void;
 }) {
   const initials = `${student.child_name?.[0] || 'S'}${student.parent_name?.[0] || 'P'}`.toUpperCase();
@@ -405,6 +470,8 @@ function StudentCard({
         ? `${Math.abs(student.daysToRenewal)}d overdue`
         : `${student.daysToRenewal}d to renewal`;
   const todayLine = `Session logged ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+  const curriculum = curriculumByLevel[normalizeCurriculumLevel(student.level)];
+  const nextTopic = curriculum.find((topic) => !completedTopics.includes(topic));
 
   function addMonths(months: number) {
     const base = student.renewal_date ? new Date(student.renewal_date) : new Date();
@@ -452,6 +519,9 @@ function StudentCard({
           <div className="h-full rounded-full bg-brand" style={{ width: `${student.progress}%` }} />
         </div>
         <div className="mt-2 text-xs font-bold text-slate-500">{student.remaining} sessions remaining</div>
+        <div className="mt-2 border-t border-slate-200 pt-2 text-xs font-bold text-slate-600">
+          Next topic: {nextTopic || 'Curriculum completed'}
+        </div>
       </div>
 
       {student.notes ? <div className="mb-4 rounded-lg border border-violet-100 bg-violet-50 p-3 text-sm font-semibold text-violet-800">{student.notes}</div> : null}
@@ -463,6 +533,9 @@ function StudentCard({
           {student.email ? <a className="btn" href={`mailto:${student.email}`}><Mail size={15} /></a> : null}
         </div>
         <div className="flex gap-2">
+          <button className="btn" onClick={() => onCurriculum(student)}>
+            <BookOpen size={15} /> Curriculum
+          </button>
           <button
             className="btn"
             onClick={() => onPatch(student.id, { sessions_done: Math.max(0, Number(student.sessions_done || 0) - 1) })}
@@ -534,6 +607,135 @@ function EditStudentModal({
           <button className="btn btn-primary">Save Changes</button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function CurriculumModal({
+  student,
+  completedTopics,
+  onClose,
+  onSave,
+}: {
+  student: Student;
+  completedTopics: string[];
+  onClose: () => void;
+  onSave: (student: Student, level: CurriculumLevel, completedTopics: string[]) => Promise<void>;
+}) {
+  const [level, setLevel] = useState<CurriculumLevel>(normalizeCurriculumLevel(student.level));
+  const [completed, setCompleted] = useState<string[]>(completedTopics);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const curriculum = curriculumByLevel[level];
+  const validCompleted = completed.filter((topic) => curriculum.includes(topic));
+  const nextTopic = curriculum.find((topic) => !validCompleted.includes(topic));
+  const progress = Math.round((validCompleted.length / curriculum.length) * 100);
+
+  function toggleTopic(topic: string) {
+    setCompleted((items) => items.includes(topic)
+      ? items.filter((item) => item !== topic)
+      : [...items, topic]);
+  }
+
+  function completeThrough(index: number) {
+    const through = curriculum.slice(0, index + 1);
+    setCompleted((items) => Array.from(new Set([...items, ...through])));
+  }
+
+  async function save() {
+    setSaving(true);
+    setError('');
+    try {
+      await onSave(student, level, validCompleted);
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Could not save curriculum');
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4" onClick={onClose}>
+      <section className="card flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden" onClick={(event) => event.stopPropagation()}>
+        <div className="border-b border-slate-200 p-4 sm:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="text-xs font-black uppercase tracking-wide text-brand">Curriculum Tracker</div>
+              <h3 className="mt-1 text-xl font-black">{student.child_name}</h3>
+              <p className="text-sm font-semibold text-slate-500">Mark what was completed after each class and see what comes next.</p>
+            </div>
+            <button className="btn" type="button" onClick={onClose}>Close</button>
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-[200px_1fr]">
+            <label>
+              <span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-400">Student level</span>
+              <select
+                className="select"
+                value={level}
+                onChange={(event) => setLevel(event.target.value as CurriculumLevel)}
+              >
+                {levelOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                <span className="font-extrabold">{validCompleted.length} of {curriculum.length} completed</span>
+                <span className="badge bg-violet-50 text-violet-700">{progress}%</span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+                <div className="h-full rounded-full bg-brand" style={{ width: `${progress}%` }} />
+              </div>
+              <div className="mt-2 text-xs font-bold text-slate-600">Next: {nextTopic || 'Curriculum completed'}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="overflow-auto p-4 sm:p-5">
+          <div className="grid gap-2 md:grid-cols-2">
+            {curriculum.map((topic, index) => {
+              const isCompleted = validCompleted.includes(topic);
+              const isNext = topic === nextTopic;
+              return (
+                <div
+                  className={`rounded-lg border p-3 ${isCompleted ? 'border-emerald-200 bg-emerald-50' : isNext ? 'border-violet-300 bg-violet-50' : 'border-slate-200 bg-white'}`}
+                  key={topic}
+                >
+                  <div className="flex items-start gap-3">
+                    <input
+                      aria-label={`Mark ${topic} completed`}
+                      checked={isCompleted}
+                      className="mt-1 h-4 w-4 accent-emerald-600"
+                      onChange={() => toggleTopic(topic)}
+                      type="checkbox"
+                    />
+                    <button className="min-w-0 flex-1 text-left" type="button" onClick={() => toggleTopic(topic)}>
+                      <div className="text-xs font-black uppercase tracking-wide text-slate-400">Class {index + 1}</div>
+                      <div className="font-extrabold text-slate-800">{topic}</div>
+                      {isNext ? <span className="badge mt-2 bg-violet-100 text-violet-700">Next class</span> : null}
+                    </button>
+                    {!isCompleted ? (
+                      <button className="btn px-2 py-1 text-xs" type="button" onClick={() => completeThrough(index)} title="Mark this and all earlier classes complete">
+                        Through
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="border-t border-slate-200 bg-white p-4 sm:p-5">
+          {error ? <div className="mb-3 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-700">{error}</div> : null}
+          <div className="flex flex-wrap justify-end gap-2">
+            <button className="btn" type="button" onClick={() => setCompleted([])}>Clear progress</button>
+            <button className="btn" type="button" onClick={onClose}>Cancel</button>
+            <button className="btn btn-primary" disabled={saving} type="button" onClick={save}>
+              <Check size={16} /> {saving ? 'Saving' : 'Save Progress'}
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
